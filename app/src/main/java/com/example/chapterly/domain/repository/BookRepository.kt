@@ -1,6 +1,9 @@
 package com.example.chapterly.domain.repository
 
 import com.example.chapterly.domain.model.Book
+import com.example.chapterly.resources.Result
+import com.example.chapterly.resources.Error
+
 
 /**
  * Repository to handle functions involving Books coming from the API
@@ -8,11 +11,11 @@ import com.example.chapterly.domain.model.Book
 interface BookRepository {
 
     // Basic search for books
-    suspend fun getBooks(): List<Book>
+    suspend fun getBooks(): Result<List<Book>,Error>
 
     // Search API Books by Title
-    suspend fun getBooksByTitle(title: String): List<Book>
+    suspend fun getBooksByTitle(title: String): Result<List<Book>, Error>
 
     // Search API Book by ISBN
-    suspend fun getBookByISBN(isbn: String): Book?
+    suspend fun getBookByISBN(isbn: String): Result<Book,Error>
 }
