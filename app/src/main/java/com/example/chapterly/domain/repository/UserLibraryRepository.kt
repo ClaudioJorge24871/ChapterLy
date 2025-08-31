@@ -1,6 +1,8 @@
 package com.example.chapterly.domain.repository
 
 import com.example.chapterly.domain.model.BookEntry
+import com.example.chapterly.resources.Result
+import com.example.chapterly.resources.Error
 
 /**
  * Repository to handle functions involving Books coming from the User Library
@@ -8,11 +10,11 @@ import com.example.chapterly.domain.model.BookEntry
 interface UserLibraryRepository {
 
     // Get all books saved by the user
-    suspend fun getUserBooks(): List<BookEntry>
+    suspend fun getUserBooks(): Result<List<BookEntry>, Error>
 
     // Save a book on User Library
-    suspend fun saveUserBook(userBook: BookEntry): Boolean
+    suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error>
 
     // Delete a book from user Library
-    suspend fun deleteUserBook(userBook: BookEntry): Boolean
+    suspend fun deleteUserBook(userBook: BookEntry): Result<Unit, Error>
 }
