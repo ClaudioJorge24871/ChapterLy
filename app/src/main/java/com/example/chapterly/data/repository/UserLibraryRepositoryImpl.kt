@@ -30,5 +30,4 @@ class UserLibraryRepositoryImpl: UserLibraryRepository {
         return if (removed) Result.Success(Unit)
         else Result.Error(BookNotFoundError)
     }
-
 }
