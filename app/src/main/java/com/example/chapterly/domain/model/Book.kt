@@ -11,6 +11,6 @@ data class Book(
     val edition: Int? = null,
     val genres: List<Genre>,
     val publisher: String,
-    val publishYear: String,
+    val publishYear: Int,
     val coverImageURL: String
 )
