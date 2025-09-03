@@ -1,22 +1,23 @@
-package com.example.chapterly.presentation.view_model
+package com.example.chapterly.presentation.ui.user_library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chapterly.domain.model.BookEntry
-import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.use_case.DeleteUserBookUseCase
 import com.example.chapterly.domain.use_case.GetUserBooksUseCase
 import com.example.chapterly.domain.use_case.SaveUserBookUseCase
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
-import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
+import com.example.chapterly.resources.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class UserLibraryVIewModel (
+@HiltViewModel
+class UserLibraryVIewModel @Inject constructor (
     private val deleteUserBookUseCase: DeleteUserBookUseCase,
     private val getUserBooksUseCase: GetUserBooksUseCase,
     private val saveUserBookUseCase: SaveUserBookUseCase
