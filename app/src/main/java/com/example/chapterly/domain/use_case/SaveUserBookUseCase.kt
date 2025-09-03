@@ -6,14 +6,16 @@ import com.example.chapterly.domain.repository.BookRepository
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.Result
+import javax.inject.Inject
 
-class SaveUserBookUseCase (
+class SaveUserBookUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository,
-    private val bookRepository: BookRepository
+    //private val bookRepository: BookRepository
 ){
     suspend operator fun invoke(userBook: BookEntry): Result<BookEntry, Error> {
-        val fetchResult = bookRepository.getBookByISBN(userBook.book.isbn)
-
+        //val fetchResult = bookRepository.getBookByISBN(userBook.book.isbn)
+        return userLibraryRepository.saveUserBook(userBook)
+        /** Used for when the BookRepository is implemented. Not obligatory for the Save feature
         return when (fetchResult) {
             is Result.Success -> {
                 val fetchedBook: Book = fetchResult.data
@@ -26,6 +28,7 @@ class SaveUserBookUseCase (
                 userLibraryRepository.saveUserBook(userBook)
             }
         }
+        */
     }
 
 

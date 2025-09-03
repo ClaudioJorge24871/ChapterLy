@@ -28,12 +28,11 @@ import com.example.chapterly.resources.Result
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserLibraryScreen(viewModel: UserLibraryVIewModel) {
+fun UserLibraryScreen(viewModel: UserLibraryViewModel, innerPadding: PaddingValues) {
 
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
 
-    // Scaffold for Material3 layout
     Scaffold(
         topBar = { TopAppBar(title = { Text("Your Library") }) },
         content = { innerPadding ->
@@ -43,12 +42,16 @@ fun UserLibraryScreen(viewModel: UserLibraryVIewModel) {
                         Text("Loading books...")
                     }
                     is Result.Success -> {
-                        BookList(
-                            books = result.data,
-                            onDelete = { bookEntry ->
-                                viewModel.deleteBook(bookEntry.toUIData())
-                            }
-                        )
+                        if (result.data.isEmpty()){ // If the user doesn't have any books added
+                            Text(text = "Add books to your library")
+                        }else{
+                            BookList(
+                                books = result.data,
+                                onDelete = { bookEntry ->
+                                    viewModel.deleteBook(bookEntry.toUIData())
+                                }
+                            )
+                        }
                     }
                     is Result.Error -> {
                         Text("Error loading books: ${result.error}")

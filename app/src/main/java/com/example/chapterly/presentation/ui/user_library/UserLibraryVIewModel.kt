@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserLibraryVIewModel @Inject constructor (
+class UserLibraryViewModel @Inject constructor (
     private val deleteUserBookUseCase: DeleteUserBookUseCase,
     private val getUserBooksUseCase: GetUserBooksUseCase,
     private val saveUserBookUseCase: SaveUserBookUseCase
@@ -26,6 +26,10 @@ class UserLibraryVIewModel @Inject constructor (
     // StateFlow: Only the ViewModel can change it
     private val _books = MutableStateFlow<Result<List<BookEntry>, Error>?>(null)
     val books: StateFlow<Result<List<BookEntry>, Error>?> = _books
+
+    init {
+        loadBooks()
+    }
 
     /**
      * Launches a coroutine on the View Model scope

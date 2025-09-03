@@ -5,8 +5,9 @@ import com.example.chapterly.domain.repository.BookRepository
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
+import javax.inject.Inject
 
-class GetUserBooksUseCase (
+class GetUserBooksUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository
 ){
     suspend operator fun invoke(): Result<List<BookEntry>, Error>{
