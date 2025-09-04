@@ -38,7 +38,10 @@ import org.intellij.lang.annotations.JdkConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserLibraryScreen(viewModel: UserLibraryViewModel, onAddBookClick: () -> Unit) {
+fun UserLibraryScreen(
+    viewModel: UserLibraryViewModel,
+    onAddBookClick: () -> Unit
+) {
 
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
