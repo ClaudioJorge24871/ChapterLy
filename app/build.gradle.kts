@@ -42,6 +42,10 @@ android {
 }
 
 dependencies {
+    val nav_version = "2.9.3"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-compiler:2.52")
 
