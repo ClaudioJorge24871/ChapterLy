@@ -16,8 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.chapterly.presentation.ui.theme.ChapterlyTheme
-import com.example.chapterly.presentation.ui.user_library.UserLibraryActivity
+import com.example.chapterly.presentation.ui.user_library.UserLibraryRoute
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +42,11 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable("addBook") {
+                            /** TODO
                             AddBookScreen(
                                 onBookAdded = { navController.popBackStack() }
                             )
+                            */
                         }
                     }
                 }

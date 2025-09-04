@@ -24,8 +24,8 @@ class UserLibraryViewModel @Inject constructor (
 ): ViewModel(){
 
     // StateFlow: Only the ViewModel can change it
-    private val _books = MutableStateFlow<Result<List<BookEntry>, Error>?>(null)
-    val books: StateFlow<Result<List<BookEntry>, Error>?> = _books
+    private val _books = MutableStateFlow<Result<List<BookEntry>, Error>>(Result.Loading)
+    val books: StateFlow<Result<List<BookEntry>, Error>> = _books
 
     init {
         loadBooks()
@@ -36,6 +36,7 @@ class UserLibraryViewModel @Inject constructor (
      */
     fun loadBooks() {
         viewModelScope.launch {
+            _books.value = Result.Loading
             val result = getUserBooksUseCase()
             _books.value = result
         }
@@ -53,6 +54,9 @@ class UserLibraryViewModel @Inject constructor (
                 is Result.Error -> {
                     //TODO update UI error state or log
                 }
+                is Result.Loading -> {
+                    //Ignore
+                }
             }
         }
     }
@@ -68,6 +72,9 @@ class UserLibraryViewModel @Inject constructor (
                 is Result.Success -> loadBooks()
                 is Result.Error -> {
                     //TODO update UI error state or log
+                }
+                is Result.Loading -> {
+                    //Ignore
                 }
             }
         }
