@@ -13,10 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,7 +38,7 @@ import org.intellij.lang.annotations.JdkConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserLibraryScreen(viewModel: UserLibraryViewModel, innerPadding: PaddingValues) {
+fun UserLibraryScreen(viewModel: UserLibraryViewModel, onAddBookClick: () -> Unit) {
 
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
@@ -53,13 +57,15 @@ fun UserLibraryScreen(viewModel: UserLibraryViewModel, innerPadding: PaddingValu
             )
             Box(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .padding(padding)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 when (val result = booksResult) {
                     null -> {
+                        // TODO
+                    }
+                    is Result.Loading -> {
                         Text("Loading books...")
                     }
                     is Result.Success -> {
@@ -73,7 +79,7 @@ fun UserLibraryScreen(viewModel: UserLibraryViewModel, innerPadding: PaddingValu
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Button(
-                                    onClick = {/* TODO navigate to add book screen */},
+                                    onClick = {onAddBookClick},
                                 ) {
                                     Text(text = "Add books to your library")
                                 }
@@ -85,6 +91,12 @@ fun UserLibraryScreen(viewModel: UserLibraryViewModel, innerPadding: PaddingValu
                                     viewModel.deleteBook(bookEntry.toUIData())
                                 }
                             )
+                            //FAB to add more books
+                            FloatingActionButton(
+                                onClick = {onAddBookClick}
+                            ) {
+                                Icon(Icons.Filled.Add, "Add book")
+                            }
                         }
                     }
                     is Result.Error -> {
