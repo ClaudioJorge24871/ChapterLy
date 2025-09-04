@@ -82,7 +82,7 @@ fun UserLibraryScreen(
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Button(
-                                    onClick = {onAddBookClick},
+                                    onClick = {onAddBookClick()},
                                 ) {
                                     Text(text = "Add books to your library")
                                 }
@@ -96,7 +96,7 @@ fun UserLibraryScreen(
                             )
                             //FAB to add more books
                             FloatingActionButton(
-                                onClick = {onAddBookClick}
+                                onClick = {onAddBookClick()}
                             ) {
                                 Icon(Icons.Filled.Add, "Add book")
                             }
