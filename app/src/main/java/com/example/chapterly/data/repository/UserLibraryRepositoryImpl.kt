@@ -7,8 +7,11 @@ import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.UnknownError
 import com.example.chapterly.resources.BookNotFoundError
+import javax.inject.Inject
 
-class UserLibraryRepositoryImpl: UserLibraryRepository {
+class UserLibraryRepositoryImpl @Inject constructor(
+
+): UserLibraryRepository {
 
     private val userBooks = mutableListOf<BookEntry>()
 

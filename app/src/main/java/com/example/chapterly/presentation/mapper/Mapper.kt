@@ -47,3 +47,19 @@ private fun String?.toDateOrNull(): Date? {
         null
     }
 }
+
+fun BookEntry.toUIData() = BookUIDataDTO (
+    isbn = book.isbn,
+    title = book.title,
+    author = book.author,
+    pagination = book.pagination.toString(),
+    edition = book.edition?.toString(),
+    genres = emptyList(),
+    publisher = book.publisher,
+    publishYear = book.publishYear.toString(),
+    coverImageURL = book.coverImageURL,
+    status = status.displayName,
+    purchaseDate = null,
+    startDate = null,
+    endDate = null
+)

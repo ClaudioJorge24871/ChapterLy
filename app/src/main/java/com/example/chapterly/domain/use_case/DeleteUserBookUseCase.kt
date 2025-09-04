@@ -4,9 +4,10 @@ import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.Result
+import javax.inject.Inject
 
 
-class DeleteUserBookUseCase (
+class DeleteUserBookUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository
 ) {
     suspend operator fun invoke(userBook: BookEntry): Result<Unit, Error>{
