@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.Result
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,8 +20,8 @@ class SaveBookViewModel @Inject constructor(
     private val saveUserBookUseCase: SaveUserBookUseCase
 ) : ViewModel() {
 
-    private val _saveResult = MutableStateFlow<Result<Unit, Error>>(Result.Loading)
-    val saveResult: StateFlow<Result<Unit, Error>> = _saveResult
+    private val _saveEvent = Channel<Unit>(Channel.BUFFERED)
+    val saveEvent = _saveEvent.receiveAsFlow()
 
     /**
      * Saves a book on User library.
@@ -28,10 +30,10 @@ class SaveBookViewModel @Inject constructor(
     fun saveBook(uiData: BookUIDataDTO){
         viewModelScope.launch{
             val entry = uiData.toDomain()
-            _saveResult.value = when(val result = saveUserBookUseCase(entry)) {
-                is Result.Success -> Result.Success(Unit)
-                is Result.Error -> Result.Error(result.error)
-                is Result.Loading -> {Result.Loading}
+            when(saveUserBookUseCase(entry)) {
+                is Result.Success -> _saveEvent.send(Unit) // emit event once
+                is Result.Error -> {}
+                is Result.Loading -> {}
             }
         }
     }

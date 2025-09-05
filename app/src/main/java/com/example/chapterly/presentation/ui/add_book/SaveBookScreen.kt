@@ -37,7 +37,7 @@ fun SaveBookScreen(
 ) {
     var book by remember { mutableStateOf(BookUIDataDTO()) }
 
-    val saveResult by viewModel.saveResult.collectAsState()
+    val saveEvent by viewModel.saveEvent.collectAsState(initial = null)
 
     Scaffold (
         topBar = { TopAppBar(title = {Text(text = "Save a book")}) },
@@ -98,16 +98,12 @@ fun SaveBookScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-            //Show status
-            when(saveResult){
-                is Result.Loading -> {}// Do nothing
-                is Result.Error -> Text(
-                    text = "Error saving book: ${(saveResult as Result.Error).error}"
-                )
-                is Result.Success -> LaunchedEffect(Unit) {
-                    onBookSaved()
-                }
+            // Collects the one-time save event from the ViewModel.
+            // When a new event is emitted (i.e., the book is successfully saved),
+            // the LaunchedEffect runs and calls onBookSaved(), triggering navigation or other actions.
+            // This ensures the effect only happens once per save and does not re-run on recompositions.
+            LaunchedEffect(saveEvent) {
+                saveEvent?.let { onBookSaved() }
             }
         }
     }
