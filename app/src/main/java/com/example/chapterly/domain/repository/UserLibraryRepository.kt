@@ -3,6 +3,7 @@ package com.example.chapterly.domain.repository
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository to handle functions involving Books coming from the User Library
@@ -10,7 +11,7 @@ import com.example.chapterly.resources.Error
 interface UserLibraryRepository {
 
     // Get all books saved by the user
-    suspend fun getUserBooks(): Result<List<BookEntry>, Error>
+    fun getUserBooks(): Flow<Result<List<BookEntry>, Error>>
 
     // Save a book on User Library
     suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error>
