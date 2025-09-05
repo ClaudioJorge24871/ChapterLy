@@ -5,12 +5,13 @@ import com.example.chapterly.domain.repository.BookRepository
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetUserBooksUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository
 ){
-    suspend operator fun invoke(): Result<List<BookEntry>, Error>{
+    operator fun invoke(): Flow<Result<List<BookEntry>, Error>> {
         return userLibraryRepository.getUserBooks()
     }
 }
