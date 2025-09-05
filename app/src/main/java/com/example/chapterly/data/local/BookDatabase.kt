@@ -2,6 +2,7 @@ package com.example.chapterly.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.chapterly.data.local.dao.BookDao
 import com.example.chapterly.data.local.entities.BookEntryEntity
 
 @Database(
