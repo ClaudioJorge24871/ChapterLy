@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,12 +22,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ChapterlyTheme {
                 val navController = rememberNavController()
+                val userLibraryViewModel: UserLibraryViewModel = hiltViewModel()
+                val saveBookViewModel: SaveBookViewModel = hiltViewModel()
+
 
                 Scaffold (
                     modifier = Modifier.fillMaxSize()
@@ -38,13 +44,11 @@ class MainActivity : ComponentActivity() {
                     ){
                         composable("library") {
                             UserLibraryRoute(
+                                viewModel = userLibraryViewModel,
                                 onAddBookClick = {navController.navigate("saveBook")}
                             )
                         }
                         composable("saveBook") {
-                            val saveBookViewModel: SaveBookViewModel = hiltViewModel()
-                            val userLibraryViewModel: UserLibraryViewModel = hiltViewModel()
-
                             SaveBookScreen(
                                 viewModel = saveBookViewModel,
                                 onBookSaved = {

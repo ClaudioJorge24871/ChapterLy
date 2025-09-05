@@ -65,9 +65,6 @@ fun UserLibraryScreen(
                 contentAlignment = Alignment.Center
             ) {
                 when (val result = booksResult) {
-                    null -> {
-                        // TODO
-                    }
                     is Result.Loading -> {
                         Text("Loading books...")
                     }
