@@ -1,5 +1,6 @@
 package com.example.chapterly.presentation.ui.user_library.components
 
+import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
 
@@ -41,8 +43,11 @@ fun BookList(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Text(bookEntry.book.title, style = MaterialTheme.typography.titleMedium)
-                        Text("by ${bookEntry.book.author}", style = MaterialTheme.typography.titleMedium)
+                        Text(bookEntry.book.title, style = MaterialTheme.typography.titleLarge)
+                        Row {
+                            Text(text= "by ", style = MaterialTheme.typography.titleSmall, color = Color.Gray)
+                            Text(text = bookEntry.book.author.toString(), style = MaterialTheme.typography.titleMedium)
+                        }
                         Text("Status: ${bookEntry.status.displayName}", style = MaterialTheme.typography.bodySmall)
                     }
                     IconButton(onClick = { onDelete(bookEntry) }) {

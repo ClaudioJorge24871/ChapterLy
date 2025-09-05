@@ -101,7 +101,7 @@ fun SaveBookScreen(
 
             //Show status
             when(saveResult){
-                is Result.Loading -> CircularProgressIndicator()
+                is Result.Loading -> {}// Do nothing
                 is Result.Error -> Text(
                     text = "Error saving book: ${(saveResult as Result.Error).error}"
                 )
