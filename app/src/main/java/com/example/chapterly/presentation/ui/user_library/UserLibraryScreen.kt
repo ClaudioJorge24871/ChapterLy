@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.presentation.mapper.toUIData
+import com.example.chapterly.presentation.ui.user_library.components.BookList
 import com.example.chapterly.resources.Result
 import org.intellij.lang.annotations.JdkConstants
 
@@ -101,38 +102,6 @@ fun UserLibraryScreen(
                     }
                     is Result.Error -> {
                         Text("Error loading books: ${result.error}")
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun BookList(
-    books: List<BookEntry>,
-    onDelete: (BookEntry) -> Unit
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(books) { bookEntry ->
-            Card(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Text(bookEntry.book.title, style = MaterialTheme.typography.titleMedium)
-                        Text("by ${bookEntry.book.author}", style = MaterialTheme.typography.titleMedium)
-                        Text("Status: ${bookEntry.status}", style = MaterialTheme.typography.bodySmall)
-                    }
-                    Button(onClick = { onDelete(bookEntry) }) {
-                        Text("Delete")
                     }
                 }
             }
