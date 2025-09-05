@@ -43,7 +43,6 @@ fun UserLibraryScreen(
     viewModel: UserLibraryViewModel,
     onAddBookClick: () -> Unit
 ) {
-
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
 
