@@ -72,21 +72,21 @@ fun UserLibraryScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
                 thickness = 1.dp
             )
-            Box(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                when (val result = booksResult) {
-                    is Result.Loading -> {
-                        Text("Loading books...")
-                    }
-                    is Result.Success -> {
-                        if (result.data.isEmpty()){ // If the user doesn't have any books added
+            Spacer(modifier = Modifier.height(8.dp))
+
+            when (val result = booksResult) {
+                is Result.Loading -> {
+                    Text("Loading books...")
+                }
+                is Result.Success -> {
+                    if (result.data.isEmpty()){ // If the user doesn't have any books added
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ){
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
                                     text = "It looks like you don't have any books saved.",
@@ -98,18 +98,18 @@ fun UserLibraryScreen(
                                     Text(text = "Add books to your library")
                                 }
                             }
-                        }else{
-                            BookList(
-                                books = result.data,
-                                onDelete = { bookEntry ->
-                                    viewModel.deleteBook(bookEntry.toUIData())
-                                }
-                            )
                         }
+                    }else{
+                        BookList(
+                            books = result.data,
+                            onDelete = { bookEntry ->
+                                viewModel.deleteBook(bookEntry.toUIData())
+                            }
+                        )
                     }
-                    is Result.Error -> {
-                        Text("Error loading books: ${result.error}")
-                    }
+                }
+                is Result.Error -> {
+                    Text("Error loading books: ${result.error}")
                 }
             }
         }
