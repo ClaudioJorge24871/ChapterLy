@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.presentation.mapper.toUIData
 import com.example.chapterly.presentation.ui.user_library.components.BookList
+import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.Result
 import org.intellij.lang.annotations.JdkConstants
 
@@ -48,6 +49,19 @@ fun UserLibraryScreen(
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Your Library") })},
+        floatingActionButton = {
+            if (
+                    booksResult is Result.Success
+                && (booksResult as Result.Success<List<BookEntry>, Error>).data.isNotEmpty()
+            ){
+                FloatingActionButton(
+                    onClick = {onAddBookClick()}
+                ) {
+                    Icon(Icons.Filled.Add, "Add book")
+                }
+            }
+        },
+        floatingActionButtonPosition = androidx.compose.material3.FabPosition.End
     ) {padding ->
         Column(
             modifier = Modifier
@@ -91,12 +105,6 @@ fun UserLibraryScreen(
                                     viewModel.deleteBook(bookEntry.toUIData())
                                 }
                             )
-                            //FAB to add more books
-                            FloatingActionButton(
-                                onClick = {onAddBookClick()}
-                            ) {
-                                Icon(Icons.Filled.Add, "Add book")
-                            }
                         }
                     }
                     is Result.Error -> {
