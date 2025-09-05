@@ -35,9 +35,9 @@ class UserLibraryViewModel @Inject constructor (
      */
     fun loadBooks() {
         viewModelScope.launch {
-            _books.value = Result.Loading
-            val result = getUserBooksUseCase()
-            _books.value = result
+            getUserBooksUseCase().collect { result ->
+                _books.value = result
+            }
         }
     }
 
