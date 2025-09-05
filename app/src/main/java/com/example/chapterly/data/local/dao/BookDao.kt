@@ -1,0 +1,22 @@
+package com.example.chapterly.data.local.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.chapterly.data.local.entities.BookEntryEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface BookDao {
+
+    @Query("SELECT * FROM book_entries")
+    fun getAllBooks(): Flow<List<BookEntryEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBook(book: BookEntryEntity)
+
+    @Delete
+    suspend fun deleteBook(book: BookEntryEntity)
+}
