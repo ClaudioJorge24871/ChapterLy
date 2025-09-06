@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.resources.Result
@@ -33,14 +38,29 @@ import org.intellij.lang.annotations.JdkConstants
 @Composable
 fun SaveBookScreen(
     viewModel: SaveBookViewModel,
-    onBookSaved: () -> Unit
+    onBookSaved: () -> Unit,
+    onGoBackClicked: () -> Unit
 ) {
     var book by remember { mutableStateOf(BookUIDataDTO()) }
 
     val saveEvent by viewModel.saveEvent.collectAsState(initial = null)
 
     Scaffold (
-        topBar = { TopAppBar(title = {Text(text = "Save a book")}) },
+        topBar = {
+            TopAppBar(
+                title = {Text(text = "Save a book")},
+                navigationIcon = {
+                    IconButton(
+                        onClick = {onGoBackClicked()}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+         },
         floatingActionButton = { // save book
             if (book.title.isNotBlank() && book.author.isNotBlank()) {
                 FloatingActionButton(
@@ -50,7 +70,7 @@ fun SaveBookScreen(
                 }
             }
         },
-        floatingActionButtonPosition = androidx.compose.material3.FabPosition.End
+        floatingActionButtonPosition = androidx.compose.material3.FabPosition.End,
     ){ padding ->
         Column (
             modifier = Modifier

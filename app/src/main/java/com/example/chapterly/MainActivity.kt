@@ -54,6 +54,9 @@ class MainActivity : ComponentActivity() {
                                 onBookSaved = {
                                     userLibraryViewModel.loadBooks() // explicit refresh
                                     navController.popBackStack()
+                                },
+                                onGoBackClicked = {
+                                    navController.popBackStack()
                                 }
                             )
                         }
