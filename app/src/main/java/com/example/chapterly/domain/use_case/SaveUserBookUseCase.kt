@@ -15,6 +15,7 @@ class SaveUserBookUseCase @Inject constructor(
     suspend operator fun invoke(userBook: BookEntry): Result<BookEntry, Error> {
         //val fetchResult = bookRepository.getBookByISBN(userBook.book.isbn)
         return userLibraryRepository.saveUserBook(userBook)
+
         /** Used for when the BookRepository is implemented. Not obligatory for the Save feature
         return when (fetchResult) {
             is Result.Success -> {

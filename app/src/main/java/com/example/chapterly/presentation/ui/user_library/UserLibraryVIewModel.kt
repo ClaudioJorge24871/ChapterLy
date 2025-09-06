@@ -20,12 +20,11 @@ import javax.inject.Inject
 class UserLibraryViewModel @Inject constructor (
     private val deleteUserBookUseCase: DeleteUserBookUseCase,
     private val getUserBooksUseCase: GetUserBooksUseCase,
-    private val saveUserBookUseCase: SaveUserBookUseCase
 ): ViewModel(){
 
     // StateFlow: Only the ViewModel can change it
-    private val _books = MutableStateFlow<Result<List<BookEntry>, Error>?>(null)
-    val books: StateFlow<Result<List<BookEntry>, Error>?> = _books
+    private val _books = MutableStateFlow<Result<List<BookEntry>, Error>>(Result.Loading)
+    val books: StateFlow<Result<List<BookEntry>, Error>> = _books
 
     init {
         loadBooks()
@@ -36,23 +35,8 @@ class UserLibraryViewModel @Inject constructor (
      */
     fun loadBooks() {
         viewModelScope.launch {
-            val result = getUserBooksUseCase()
-            _books.value = result
-        }
-    }
-
-    /**
-     * Saves a book on User library.
-     * Loads the books on Success
-     */
-    fun saveBook(uiData: BookUIDataDTO){
-        viewModelScope.launch{
-            val entry = uiData.toDomain()
-            when(val result = saveUserBookUseCase(entry)) {
-                is Result.Success -> loadBooks()
-                is Result.Error -> {
-                    //TODO update UI error state or log
-                }
+            getUserBooksUseCase().collect { result ->
+                _books.value = result
             }
         }
     }
@@ -68,6 +52,9 @@ class UserLibraryViewModel @Inject constructor (
                 is Result.Success -> loadBooks()
                 is Result.Error -> {
                     //TODO update UI error state or log
+                }
+                is Result.Loading -> {
+                    //Ignore
                 }
             }
         }

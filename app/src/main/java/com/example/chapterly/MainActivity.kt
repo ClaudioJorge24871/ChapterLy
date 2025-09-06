@@ -1,22 +1,66 @@
 package com.example.chapterly
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.chapterly.presentation.ui.user_library.UserLibraryActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.chapterly.presentation.ui.add_book.SaveBookScreen
+import com.example.chapterly.presentation.ui.add_book.SaveBookViewModel
+import com.example.chapterly.presentation.ui.theme.ChapterlyTheme
+import com.example.chapterly.presentation.ui.user_library.UserLibraryRoute
+import com.example.chapterly.presentation.ui.user_library.UserLibraryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            ChapterlyTheme {
+                val navController = rememberNavController()
+                val userLibraryViewModel: UserLibraryViewModel = hiltViewModel()
+                val saveBookViewModel: SaveBookViewModel = hiltViewModel()
 
-        // Redirects to User library on app launch
-        val intent = Intent(this, UserLibraryActivity::class.java)
-        startActivity(intent)
 
-        //Prevent going back to MainActivity
-        finish()
+                Scaffold (
+                    modifier = Modifier.fillMaxSize()
+                ){ innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = "library",
+                        modifier = Modifier.padding(innerPadding)
+                    ){
+                        composable("library") {
+                            UserLibraryRoute(
+                                viewModel = userLibraryViewModel,
+                                onAddBookClick = {navController.navigate("saveBook")}
+                            )
+                        }
+                        composable("saveBook") {
+                            SaveBookScreen(
+                                viewModel = saveBookViewModel,
+                                onBookSaved = {
+                                    userLibraryViewModel.loadBooks() // explicit refresh
+                                    navController.popBackStack()
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
