@@ -3,6 +3,7 @@ package com.example.chapterly.di
 import com.example.chapterly.domain.repository.BookRepository
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.domain.use_case.DeleteUserBookUseCase
+import com.example.chapterly.domain.use_case.GetUserBookByISBNUseCase
 import com.example.chapterly.domain.use_case.GetUserBooksUseCase
 import com.example.chapterly.domain.use_case.SaveUserBookUseCase
 import dagger.Module
@@ -19,8 +20,12 @@ object UseCaseModule {
         GetUserBooksUseCase(repo)
 
     @Provides
-    fun provideSaveUserBookUseCase(UserLibraryRepo: UserLibraryRepository): SaveUserBookUseCase =
-        SaveUserBookUseCase(UserLibraryRepo)
+    fun provideGetUserBookByISBNUseCase(repo: UserLibraryRepository): GetUserBookByISBNUseCase =
+        GetUserBookByISBNUseCase(repo)
+
+    @Provides
+    fun provideSaveUserBookUseCase(userLibraryRepo: UserLibraryRepository): SaveUserBookUseCase =
+        SaveUserBookUseCase(userLibraryRepo)
 
     @Provides
     fun provideDeleteUserBookUseCase(repo: UserLibraryRepository): DeleteUserBookUseCase =
