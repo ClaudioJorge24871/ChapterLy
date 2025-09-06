@@ -13,6 +13,9 @@ interface UserLibraryRepository {
     // Get all books saved by the user
     fun getUserBooks(): Flow<Result<List<BookEntry>, Error>>
 
+    // Get a book by its ISBN
+    fun getBookByISBN(isbn: String): Result<BookEntry, Error>
+
     // Save a book on User Library
     suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error>
 

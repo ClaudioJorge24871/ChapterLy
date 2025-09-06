@@ -32,6 +32,15 @@ class UserLibraryRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getBookByISBN(isbn: String): Result<BookEntry, Error> {
+        return try{
+            val userBook = bookDao.getBookByISBN(isbn).toDomain()
+            Result.Success(userBook)
+        }catch (e: Exception){
+            Result.Error(UnknownError(e.message ?: "Unknown"))
+        }
+    }
+
     override suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try {
             bookDao.insertBook(userBook.toEntity())
