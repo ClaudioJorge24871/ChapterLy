@@ -42,7 +42,8 @@ import org.intellij.lang.annotations.JdkConstants
 @Composable
 fun UserLibraryScreen(
     viewModel: UserLibraryViewModel,
-    onAddBookClick: () -> Unit
+    onAddBookClick: () -> Unit,
+    onSelectedBook: (String) -> Unit
 ) {
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
@@ -104,7 +105,8 @@ fun UserLibraryScreen(
                             books = result.data,
                             onDelete = { bookEntry ->
                                 viewModel.deleteBook(bookEntry.toUIData())
-                            }
+                            },
+                            onSelectedBook = { isbn -> onSelectedBook(isbn) }
                         )
                     }
                 }
