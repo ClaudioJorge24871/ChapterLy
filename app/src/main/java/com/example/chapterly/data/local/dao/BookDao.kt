@@ -14,6 +14,9 @@ interface BookDao {
     @Query("SELECT * FROM book_entries")
     fun getAllBooks(): Flow<List<BookEntryEntity>>
 
+    @Query("SELECT * FROM book_entries WHERE isbn == :isbn")
+    fun getBookByISBN(isbn: String): BookEntryEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntryEntity)
 
