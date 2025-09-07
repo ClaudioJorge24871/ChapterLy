@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 @Composable
 fun UserLibraryRoute(
     onAddBookClick: () -> Unit,
-    viewModel: UserLibraryViewModel = hiltViewModel()
+    viewModel: UserLibraryViewModel = hiltViewModel(),
+    onSelectedBook: (String) -> Unit
 ){
     UserLibraryScreen(
         viewModel = viewModel,
-        onAddBookClick = onAddBookClick
+        onAddBookClick = onAddBookClick,
+        onSelectedBook = onSelectedBook
     )
 }
