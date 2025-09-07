@@ -15,17 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.chapterly.data.local.entities.BookEntryEntity
-import com.example.chapterly.domain.model.Book
 import com.example.chapterly.presentation.mapper.toUIData
 import com.example.chapterly.presentation.ui.add_book.SaveBookScreen
 import com.example.chapterly.presentation.ui.add_book.SaveBookViewModel
 import com.example.chapterly.presentation.ui.theme.ChapterlyTheme
-import com.example.chapterly.presentation.ui.updated_book.UpdateBookScreen
+import com.example.chapterly.presentation.ui.update_book.UpdateBookScreen
 import com.example.chapterly.presentation.ui.user_library.UserLibraryRoute
 import com.example.chapterly.presentation.ui.user_library.UserLibraryViewModel
 import com.example.chapterly.resources.Result
@@ -59,8 +56,8 @@ class MainActivity : ComponentActivity() {
                                 onAddBookClick = {navController.navigate("saveBook")},
                                 onSelectedBook = { isbn ->
                                     // encode in case isbn contains special chars
-                                    val encoded = Uri.encode(isbn)
-                                    navController.navigate("updateBook/$encoded")
+                                    //val encoded = Uri.encode(isbn)
+                                    navController.navigate("updateBook/$isbn")
                                 }
                             )
                         }

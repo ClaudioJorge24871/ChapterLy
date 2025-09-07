@@ -1,8 +1,8 @@
-package com.example.chapterly.presentation.ui.updated_book
+package com.example.chapterly.presentation.ui.update_book
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.example.chapterly.presentation.dto.BookUIDataDTO
+import com.example.chapterly.presentation.ui.add_book.SaveBookScreen
 import com.example.chapterly.presentation.ui.add_book.SaveBookViewModel
 
 @Composable
@@ -12,5 +12,11 @@ fun UpdateBookScreen(
     onBookUpdated: () -> Unit,
     onGoBackClicked: () -> Unit
 ) {
-
+    SaveBookScreen(
+        viewModel = viewModel,
+        initialBook = selectedBook,
+        onBookSaved = onBookUpdated,
+        onGoBackClicked = onGoBackClicked,
+        isEdit = true
+    )
 }

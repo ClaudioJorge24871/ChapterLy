@@ -39,16 +39,18 @@ import org.intellij.lang.annotations.JdkConstants
 fun SaveBookScreen(
     viewModel: SaveBookViewModel,
     onBookSaved: () -> Unit,
-    onGoBackClicked: () -> Unit
+    onGoBackClicked: () -> Unit,
+    initialBook: BookUIDataDTO = BookUIDataDTO(),
+    isEdit: Boolean = false
 ) {
-    var book by remember { mutableStateOf(BookUIDataDTO()) }
+    var book by remember { mutableStateOf(initialBook) }
 
     val saveEvent by viewModel.saveEvent.collectAsState(initial = null)
 
     Scaffold (
         topBar = {
             TopAppBar(
-                title = {Text(text = "Save a book")},
+                title = {Text(text = if(isEdit) "Update: '${initialBook.title}'" else "Add a new book")},
                 navigationIcon = {
                     IconButton(
                         onClick = {onGoBackClicked()}
@@ -66,7 +68,7 @@ fun SaveBookScreen(
                 FloatingActionButton(
                     onClick = { viewModel.saveBook(book) }
                 ) {
-                    Text("Save")
+                    Text(if (isEdit) "Update" else "Save")
                 }
             }
         },
