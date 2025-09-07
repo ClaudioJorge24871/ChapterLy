@@ -66,7 +66,13 @@ fun SaveBookScreen(
         floatingActionButton = { // save book
             if (book.title.isNotBlank() && book.author.isNotBlank()) {
                 FloatingActionButton(
-                    onClick = { viewModel.saveBook(book) }
+                    onClick = {
+                        if (isEdit){
+                            viewModel.updateBook(book)
+                        }else{
+                            viewModel.saveBook(book)
+                        }
+                    }
                 ) {
                     Text(if (isEdit) "Update" else "Save")
                 }
@@ -121,7 +127,7 @@ fun SaveBookScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Collects the one-time save event from the ViewModel.
-            // When a new event is emitted (i.e., the book is successfully saved),
+            // When a new event is emitted (i.e., the book is successfully saved or updated),
             // the LaunchedEffect runs and calls onBookSaved(), triggering navigation or other actions.
             // This ensures the effect only happens once per save and does not re-run on recompositions.
             LaunchedEffect(saveEvent) {

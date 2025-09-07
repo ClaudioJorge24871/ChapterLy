@@ -19,6 +19,8 @@ interface UserLibraryRepository {
     // Save a book on User Library
     suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error>
 
+    suspend fun updateUserBook(userBook: BookEntry): Result<BookEntry, Error>
+
     // Delete a book from user Library
     suspend fun deleteUserBook(userBook: BookEntry): Result<Unit, Error>
 }

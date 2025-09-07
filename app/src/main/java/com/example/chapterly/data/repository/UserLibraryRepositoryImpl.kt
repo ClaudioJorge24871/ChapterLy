@@ -10,6 +10,7 @@ import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.UnknownError
 import com.example.chapterly.resources.BookNotFoundError
+import com.example.chapterly.resources.UpdatingBookError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
@@ -47,6 +48,19 @@ class UserLibraryRepositoryImpl @Inject constructor(
             Result.Success(userBook)
         }catch (e: Exception) {
             Result.Error(UnknownError(e.message ?: "Unknown"))
+        }
+    }
+
+    override suspend fun updateUserBook(userBook: BookEntry): Result<BookEntry, Error> {
+        return try{
+            bookDao.updateBook(userBook.toEntity())
+            Result.Success(userBook)
+        }catch (e:Exception) {
+            Result.Error(
+                UpdatingBookError(
+                    e.message ?: "Error while updating book: ${userBook.toEntity().title}"
+                )
+            )
         }
     }
 

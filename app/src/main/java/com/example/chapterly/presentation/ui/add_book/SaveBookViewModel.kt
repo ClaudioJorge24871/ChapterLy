@@ -3,6 +3,7 @@ package com.example.chapterly.presentation.ui.add_book
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chapterly.domain.use_case.SaveUserBookUseCase
+import com.example.chapterly.domain.use_case.UpdateUserBookUseCase
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaveBookViewModel @Inject constructor(
-    private val saveUserBookUseCase: SaveUserBookUseCase
+    private val saveUserBookUseCase: SaveUserBookUseCase,
+    private val updateUserBookUseCase: UpdateUserBookUseCase
 ) : ViewModel() {
 
     private val _saveEvent = Channel<Unit>(Channel.BUFFERED)
@@ -36,5 +38,18 @@ class SaveBookViewModel @Inject constructor(
                 is Result.Loading -> {}
             }
         }
+    }
+
+
+    fun updateBook(uiData: BookUIDataDTO){
+        viewModelScope.launch {
+            val entry = uiData.toDomain()
+            when (updateUserBookUseCase(entry)) {
+                is Result.Success -> _saveEvent.send(Unit)
+                is Result.Error -> {}
+                is Result.Loading -> {}
+            }
+        }
+
     }
 }
