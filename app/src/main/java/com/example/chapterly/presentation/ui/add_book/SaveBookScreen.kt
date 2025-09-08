@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -106,13 +107,13 @@ fun SaveBookScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = book.pagination,
-                onValueChange = { book = book.copy(pagination = it) },
-                label = { Text("Pages") },
+                value = book.publisher,
+                onValueChange = { book = book.copy(publisher = it) },
+                label = { Text("Publisher") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = book.publisher,
+                value = book.edition ?: "",
                 onValueChange = { book = book.copy(publisher = it) },
                 label = { Text("Publisher") },
                 modifier = Modifier.fillMaxWidth()
@@ -121,6 +122,36 @@ fun SaveBookScreen(
                 value = book.publishYear,
                 onValueChange = { book = book.copy(publishYear = it) },
                 label = { Text("Publish Year") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = book.pagination,
+                onValueChange = { book = book.copy(pagination = it) },
+                label = { Text("Pages") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = book.coverImageURL,
+                onValueChange = {book = book.copy(coverImageURL = it)},
+                label = {Text("Image URL")},
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = book.purchaseDate ?: "",
+                onValueChange = {book = book.copy(startDate = it)},
+                label = {Text("Start Date")},
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = book.startDate ?: "",
+                onValueChange = {book = book.copy(startDate = it)},
+                label = {Text("Start Date")},
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = book.endDate ?: "",
+                onValueChange = {book = book.copy(startDate = it)},
+                label = {Text("Start Date")},
                 modifier = Modifier.fillMaxWidth()
             )
 
