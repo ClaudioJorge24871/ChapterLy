@@ -48,10 +48,11 @@ fun DateField(
         properties = DialogProperties(),
         buttons = {
             positiveButton(text = "Ok") {
+                onDateSelected(pickedDate)
                 Toast.makeText(
                     context,
                     "$label saved!",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
                 ).show()
             }
             negativeButton(text = "Cancel")
