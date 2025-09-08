@@ -32,8 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.presentation.dto.BookUIDataDTO
+import com.example.chapterly.presentation.mapper.toLocalDateOrNull
+import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.resources.Result
+import kotlinx.coroutines.selects.select
 import org.intellij.lang.annotations.JdkConstants
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,6 +140,14 @@ fun SaveBookScreen(
                 label = {Text("Image URL")},
                 modifier = Modifier.fillMaxWidth()
             )
+            DateField(
+                label = "Purchase Date",
+                date = book.purchaseDate.toLocalDateOrNull(),
+                onDateSelected = { selected ->
+                    book = book.copy(purchaseDate = selected.toString())
+                }
+            )
+            /**
             OutlinedTextField(
                 value = book.purchaseDate ?: "",
                 onValueChange = {book = book.copy(startDate = it)},
@@ -154,6 +166,7 @@ fun SaveBookScreen(
                 label = {Text("Start Date")},
                 modifier = Modifier.fillMaxWidth()
             )
+            */
 
             Spacer(modifier = Modifier.height(16.dp))
 
