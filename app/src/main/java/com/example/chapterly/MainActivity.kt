@@ -68,6 +68,10 @@ class MainActivity : ComponentActivity() {
                                     userLibraryViewModel.loadBooks() // explicit refresh
                                     navController.popBackStack()
                                 },
+                                onDeleteBook = { bookEntry ->
+                                    userLibraryViewModel.deleteBook(bookEntry.toUIData())
+                                    navController.popBackStack()
+                                },
                                 onGoBackClicked = {
                                     navController.popBackStack()
                                 }
@@ -96,6 +100,10 @@ class MainActivity : ComponentActivity() {
                                         onBookUpdated = {
                                             userLibraryViewModel.loadBooks()
                                             userLibraryViewModel.clearSelectedBook()
+                                            navController.popBackStack()
+                                        },
+                                        onDeleteBook = { bookEntry ->
+                                            userLibraryViewModel.deleteBook(bookEntry.toUIData())
                                             navController.popBackStack()
                                         },
                                         onGoBackClicked = {

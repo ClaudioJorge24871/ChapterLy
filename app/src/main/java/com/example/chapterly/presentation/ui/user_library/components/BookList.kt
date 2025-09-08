@@ -1,10 +1,13 @@
 package com.example.chapterly.presentation.ui.user_library.components
 
 import android.R
+import android.adservices.topics.Topic
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,7 +39,6 @@ import com.example.chapterly.domain.model.BookEntry
 @Composable
 fun BookList(
     books: List<BookEntry>,
-    onDelete: (BookEntry) -> Unit,
     onSelectedBook: (String) -> Unit
 ) {
     LazyVerticalGrid(
@@ -52,19 +55,21 @@ fun BookList(
                     .height(160.dp),
                 onClick = {onSelectedBook(bookEntry.book.isbn)}
             ){
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
                 ) {
                     Column (
                         modifier = Modifier
-                            .weight(1f)
+                            .align(Alignment.TopStart)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = bookEntry.book.title, style = MaterialTheme.typography.titleLarge,
-                            maxLines = 2, overflow = TextOverflow.Ellipsis
+                            maxLines = 2, overflow = TextOverflow.Ellipsis,
                         )
+                        Spacer(modifier = Modifier.weight(1f))
                         Column(
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Bottom
@@ -72,20 +77,15 @@ fun BookList(
                             Row(
                             ) {
                                 Text(text= "by ", style = MaterialTheme.typography.titleSmall, color = Color.Gray)
-                                Text(text = bookEntry.book.author.toString(), style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    text = bookEntry.book.author.toString(), style = MaterialTheme.typography.titleMedium,
+                                    maxLines = 1, overflow = TextOverflow.Ellipsis
+                                )
                             }
                             Text("Status: ${bookEntry.status.displayName}", style = MaterialTheme.typography.bodySmall)
                         }
                     }
-                    IconButton(
-                        onClick = { onDelete(bookEntry) },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete book"
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }

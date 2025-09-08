@@ -103,9 +103,6 @@ fun UserLibraryScreen(
                     }else{
                         BookList(
                             books = result.data,
-                            onDelete = { bookEntry ->
-                                viewModel.deleteBook(bookEntry.toUIData())
-                            },
                             onSelectedBook = { isbn -> onSelectedBook(isbn) }
                         )
                     }

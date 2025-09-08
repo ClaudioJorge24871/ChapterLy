@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.presentation.dto.BookUIDataDTO
+import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toLocalDateOrNull
 import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.resources.Result
@@ -47,6 +50,7 @@ fun SaveBookScreen(
     viewModel: SaveBookViewModel,
     onBookSaved: () -> Unit,
     onGoBackClicked: () -> Unit,
+    onDeleteBook: (BookEntry) -> Unit,
     initialBook: BookUIDataDTO = BookUIDataDTO(),
     isEdit: Boolean = false
 ) {
@@ -66,6 +70,18 @@ fun SaveBookScreen(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
                         )
+                    }
+                },
+                actions = {
+                    if(isEdit){
+                        IconButton(
+                            onClick = { onDeleteBook(initialBook.toDomain()) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Delete book"
+                            )
+                        }
                     }
                 }
             )
