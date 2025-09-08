@@ -1,5 +1,7 @@
 package com.example.chapterly.presentation.dto
 
+import java.time.LocalDate
+
 /**
  * DTO for capturing book input from the UI.
  * Mirrors user-facing fields, usually Strings (from TextFields).
@@ -16,7 +18,7 @@ data class BookUIDataDTO(
     val coverImageURL: String = "",
     //BookEntry data
     val status: String = "",
-    val purchaseDate: String? = null,
-    val startDate: String? = null,
-    val endDate: String? = null
+    val purchaseDate: LocalDate? = null,
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null
 )
