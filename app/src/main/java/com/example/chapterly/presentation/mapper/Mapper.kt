@@ -5,6 +5,7 @@ import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.Status
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 
@@ -31,18 +32,18 @@ fun BookUIDataDTO.toDomain(): BookEntry{
     return BookEntry(
         book = book,
         status = statusEnum,
-        purchaseDate = purchaseDate.toDateOrNull(),
-        startDate = startDate.toDateOrNull(),
-        endDate = endDate.toDateOrNull()
+        purchaseDate = purchaseDate.toLocalDateOrNull(),
+        startDate = startDate.toLocalDateOrNull(),
+        endDate = endDate.toLocalDateOrNull()
     )
 }
 
 private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-private fun String?.toDateOrNull(): Date? {
+fun String?.toLocalDateOrNull(): LocalDate? {
     if (this.isNullOrBlank()) return null
     return try{
-        dateFormat.parse(this)
+        LocalDate.parse(this)
     }catch(e: Exception){
         null
     }

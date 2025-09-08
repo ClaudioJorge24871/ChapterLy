@@ -4,7 +4,11 @@ import com.example.chapterly.data.local.entities.BookEntryEntity
 import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.model.Status
+import java.time.Instant
 import java.util.Date
+
+import java.time.LocalDate
+import java.time.ZoneId
 
 fun BookEntry.toEntity(): BookEntryEntity = BookEntryEntity(
     isbn = book.isbn,
@@ -17,9 +21,9 @@ fun BookEntry.toEntity(): BookEntryEntity = BookEntryEntity(
     publishYear = book.publishYear,
     coverImageURL = book.coverImageURL,
     status = status.name,
-    purchaseDate = purchaseDate?.time,
-    startDate = startDate?.time,
-    endDate = endDate?.time
+    purchaseDate = purchaseDate?.toEpochMilli(),
+    startDate = startDate?.toEpochMilli(),
+    endDate = endDate?.toEpochMilli()
 )
 
 fun BookEntryEntity.toDomain(): BookEntry = BookEntry(
@@ -35,7 +39,14 @@ fun BookEntryEntity.toDomain(): BookEntry = BookEntry(
         coverImageURL = coverImageURL
     ),
     status = Status.valueOf(status),
-    purchaseDate = purchaseDate?.let { Date(it) },
-    startDate = startDate?.let {Date(it)},
-    endDate = endDate?.let {Date(it)}
+    purchaseDate = purchaseDate?.toLocalDate(),
+    startDate = startDate?.toLocalDate(),
+    endDate = endDate?.toLocalDate(),
 )
+
+
+fun LocalDate.toEpochMilli(): Long =
+    this.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+fun Long.toLocalDate(): LocalDate =
+    Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()

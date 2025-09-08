@@ -1,5 +1,6 @@
 package com.example.chapterly.domain.model
 
+import java.time.LocalDate
 import java.util.Date
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date
 data class BookEntry(
     val book: Book,
     val status: Status,
-    val purchaseDate: Date? = null,
-    val startDate: Date? = null,
-    val endDate: Date? = null,
+    val purchaseDate: LocalDate? = null,
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null,
 )
