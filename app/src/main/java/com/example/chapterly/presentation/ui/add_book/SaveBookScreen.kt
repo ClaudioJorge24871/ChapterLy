@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -184,10 +185,19 @@ fun SaveBookScreen(
                 )
                 OutlinedTextField(
                     value = book.pagination,
-                    onValueChange = { book = book.copy(pagination = it) },
+                    onValueChange = { newValue ->
+                        if (newValue.all { it.isDigit() }) {
+                            val limitedValue = if (newValue.length > 6) {
+                                Toast.makeText(context, "I highly doubt that your book has that many digits.", Toast.LENGTH_SHORT).show()
+                                newValue.take(5)
+                            } else newValue
+                            book = book.copy(pagination = limitedValue)
+                        }
+                    },
                     label = { Text("Pagination") },
-                    modifier = Modifier.weight(1f),
-                    singleLine = true
+                    modifier = Modifier.width(120.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
                 )
             }
             /**
