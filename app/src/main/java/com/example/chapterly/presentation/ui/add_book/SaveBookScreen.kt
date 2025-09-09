@@ -1,6 +1,6 @@
 package com.example.chapterly.presentation.ui.add_book
 
-import android.graphics.Outline
+import android.R
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,16 +15,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +51,7 @@ import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toLocalDateOrNull
 import com.example.chapterly.presentation.ui.common.DateField
+import com.example.chapterly.presentation.ui.common.helper.snackBarSaveBookValidation
 import com.example.chapterly.resources.Result
 import kotlinx.coroutines.selects.select
 import org.intellij.lang.annotations.JdkConstants
@@ -66,7 +73,16 @@ fun SaveBookScreen(
 
     val saveEvent by viewModel.saveEvent.collectAsState(initial = null)
 
+    // Variables for data validation
+    val snackBarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    var yearError by remember { mutableStateOf<String?>(null) }
+    var paginationError by remember {mutableStateOf<String?>(null)}
+    var titleError by remember { mutableStateOf(false) }
+    var authorError by remember { mutableStateOf(false) }
+
     Scaffold (
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             TopAppBar(
                 title = {Text(text = if(isEdit) "Update: '${initialBook.title}'" else "Add a new book")},
@@ -95,19 +111,23 @@ fun SaveBookScreen(
             )
          },
         floatingActionButton = { // save book
-            if (book.title.isNotBlank() && book.author.isNotBlank()) {
-                FloatingActionButton(
-                    onClick = {
-                        if (isEdit){
+            ExtendedFloatingActionButton(
+                onClick = {
+                    val result = snackBarSaveBookValidation(book, coroutineScope, snackBarHostState)
+                    titleError = result.titleError
+                    authorError = result.authorError
+
+                    if(result.isValid){
+                        if(isEdit){
                             viewModel.updateBook(book)
                         }else{
                             viewModel.saveBook(book)
                         }
                     }
-                ) {
-                    Text(if (isEdit) "Update" else "Save")
-                }
-            }
+                },
+                text = {Text(if(isEdit) "Update" else "Save")},
+                icon = {Icon(Icons.Default.Check, contentDescription = null)},
+            )
         },
         floatingActionButtonPosition = androidx.compose.material3.FabPosition.End,
     ){ padding ->
@@ -127,14 +147,16 @@ fun SaveBookScreen(
                     onValueChange = {book = book.copy(title = it)},
                     label = {Text(text = "Title")},
                     modifier = Modifier.weight(1f),
-                    singleLine = true
+                    singleLine = true,
+                    isError = titleError
                 )
                 OutlinedTextField(
                     value = book.author,
                     onValueChange = {book = book.copy(author = it)},
                     label = {Text(text = "Author")},
                     modifier = Modifier.weight(1f),
-                    singleLine = true
+                    singleLine = true,
+                    isError = authorError
                 )
             }
             OutlinedTextField(
@@ -159,17 +181,25 @@ fun SaveBookScreen(
                     value = book.publishYear,
                     onValueChange = { newValue ->
                         if (newValue.all { it.isDigit() }) {
-                            val limitedValue = if (newValue.length > 4) {
-                                Toast.makeText(context, "Year cannot have more than 4 digits", Toast.LENGTH_SHORT).show()
-                                newValue.take(4)
-                            } else newValue
-                            book = book.copy(publishYear = limitedValue)
+                            if (newValue.length > 4) {
+                                yearError = "Year must be under 5 digits"
+                                book = book.copy(publishYear = newValue.take(4))
+                            } else{
+                                yearError = null
+                                book = book.copy(publishYear = newValue)
+                            }
                         }
                     },
                     label = { Text("Year") },
                     modifier = Modifier.width(120.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
+                    isError = yearError != null,
+                    supportingText = {
+                        yearError?.let{
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
             }
             Row(
@@ -187,17 +217,25 @@ fun SaveBookScreen(
                     value = book.pagination,
                     onValueChange = { newValue ->
                         if (newValue.all { it.isDigit() }) {
-                            val limitedValue = if (newValue.length > 6) {
-                                Toast.makeText(context, "I highly doubt that your book has that many digits.", Toast.LENGTH_SHORT).show()
-                                newValue.take(5)
-                            } else newValue
-                            book = book.copy(pagination = limitedValue)
+                            if(newValue.length > 5){
+                                paginationError = "Pagination must be under 6 digits"
+                                book = book.copy(pagination = newValue.take(5))
+                            }else{
+                                paginationError = null
+                                book = book.copy(pagination = newValue)
+                            }
                         }
                     },
                     label = { Text("Pagination") },
                     modifier = Modifier.width(120.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
+                    isError = paginationError != null,
+                    supportingText = {
+                        paginationError?.let{
+                            Text(text = it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
             }
             /**
