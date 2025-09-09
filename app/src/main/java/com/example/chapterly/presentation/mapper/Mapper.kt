@@ -60,7 +60,7 @@ fun BookEntry.toUIData() = BookUIDataDTO (
     publishYear = book.publishYear.toString(),
     coverImageURL = book.coverImageURL,
     status = status.displayName,
-    purchaseDate = null,
-    startDate = null,
-    endDate = null
+    purchaseDate = purchaseDate.toString(),
+    startDate = startDate.toString(),
+    endDate = endDate.toString()
 )

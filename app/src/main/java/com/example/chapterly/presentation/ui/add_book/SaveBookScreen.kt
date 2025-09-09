@@ -238,14 +238,7 @@ fun SaveBookScreen(
                     }
                 )
             }
-            /**
-            OutlinedTextField(
-                value = book.coverImageURL,
-                onValueChange = {book = book.copy(coverImageURL = it)},
-                label = {Text("Image URL")},
-                modifier = Modifier.fillMaxWidth()
-            )
-            */
+
             DateField(
                 label = "Purchase Date",
                 date = book.purchaseDate.toLocalDateOrNull(),
@@ -253,7 +246,29 @@ fun SaveBookScreen(
                     book = book.copy(purchaseDate = selected.toString())
                 }
             )
+            DateField(
+                label = "Start Date",
+                date = book.startDate.toLocalDateOrNull(),
+                onDateSelected = { selected ->
+                    book = book.copy(startDate = selected.toString())
+                }
+            )
+            DateField(
+                label = "End Date",
+                date = book.endDate.toLocalDateOrNull(),
+                onDateSelected = { selected ->
+                    book = book.copy(endDate = selected.toString())
+                }
+            )
 
+            /**
+            OutlinedTextField(
+            value = book.coverImageURL,
+            onValueChange = {book = book.copy(coverImageURL = it)},
+            label = {Text("Image URL")},
+            modifier = Modifier.fillMaxWidth()
+            )
+             */
             Spacer(modifier = Modifier.height(16.dp))
 
             // Collects the one-time save event from the ViewModel.

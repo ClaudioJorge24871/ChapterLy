@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                                 null -> {}
                                 is Result.Loading -> {
                                     // show loading UI
+                                    /*TODO Rearrange the loading icon. Needs to be bigger and in the center of screen**/
                                     androidx.compose.material3.CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                                 }
                                 is Result.Success -> {
