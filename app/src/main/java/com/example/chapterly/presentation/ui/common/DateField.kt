@@ -1,67 +1,68 @@
 package com.example.chapterly.presentation.ui.common
 
-import android.widget.Toast
-import androidx.compose.material3.Button
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentCompositionContext
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.window.DialogProperties
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import dagger.hilt.internal.aggregatedroot.codegen._com_example_chapterly_ChapterlyApplication
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-/**
- * Composable file to use as Date fields in screens
- */
 @Composable
 fun DateField(
     label: String,
     date: LocalDate?,
-    onDateSelected: (LocalDate) -> Unit
+    onDateSelected: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var pickedDate by remember {
-        mutableStateOf(date ?: LocalDate.now())
-    }
-    val context = LocalContext.current
     val dateDialogState = rememberMaterialDialogState()
+    var pickedDate by remember { mutableStateOf(date ?: LocalDate.now()) }
+    val formatter = remember { DateTimeFormatter.ofPattern("MMM dd, yyyy") }
+    val formattedDate = date?.format(formatter) ?: ""
 
+    OutlinedTextField(
+        value = formattedDate,
+        onValueChange = {},
+        readOnly = true,
+        label = { Text(label) },
+        trailingIcon = {
+            IconButton(onClick = { dateDialogState.show() }) {
+                Icon(Icons.Default.DateRange, contentDescription = "Select date")
+            }
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable{dateDialogState.show()},
+        enabled = false,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledContainerColor = OutlinedTextFieldDefaults.colors().unfocusedContainerColor,
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledBorderColor = MaterialTheme.colorScheme.outline
+        ),
+    )
 
-    Button(
-        onClick = {
-            dateDialogState.show()
-        }
-    ){
-        Text(text = date?.toString() ?: label)
-    }
     MaterialDialog(
         dialogState = dateDialogState,
-        properties = DialogProperties(),
         buttons = {
-            positiveButton(text = "Ok") {
-                onDateSelected(pickedDate)
-                Toast.makeText(
-                    context,
-                    "$label saved!",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            negativeButton(text = "Cancel")
+            positiveButton("Ok") { onDateSelected(pickedDate) }
+            negativeButton("Cancel")
         }
     ) {
-        datepicker(
-            initialDate = pickedDate,
-        ) { picked ->
-            pickedDate = picked
-        }
+        datepicker(initialDate = pickedDate) { picked -> pickedDate = picked }
     }
 }
