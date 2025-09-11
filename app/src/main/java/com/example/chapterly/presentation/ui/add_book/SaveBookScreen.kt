@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
@@ -33,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -64,6 +66,7 @@ fun SaveBookScreen(
     var paginationError by remember { mutableStateOf<String?>(null) }
     var titleError by remember { mutableStateOf(false) }
     var authorError by remember { mutableStateOf(false) }
+    var currentPageError by remember {mutableStateOf<String?>(null)}
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -236,6 +239,77 @@ fun SaveBookScreen(
                         }
                     }
                 }
+            }
+
+            item {
+                // --- Other Data Section
+                Card(modifier = Modifier.fillMaxWidth()){
+                    Column(
+                        Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ){
+                        Text(text = "Other Data", style = MaterialTheme.typography.titleMedium)
+                        // Status
+                        // Genres
+                        // Current Page
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            OutlinedTextField(
+                                value = book.currentPage,
+                                onValueChange = { newValue ->
+                                    if (newValue.all { it.isDigit() }) {
+                                        val newPage = newValue.toIntOrNull()
+                                        val totalPages = book.pagination.toIntOrNull()
+
+                                        if (newPage != null && totalPages != null && newPage > totalPages) {
+                                            currentPageError = "Current page cannot be above the pagination"
+                                            book = book.copy(currentPage = totalPages.toString())
+                                        } else {
+                                            currentPageError = null
+                                            book = book.copy(currentPage = newValue)
+                                        }
+                                    }
+                                },
+                                label = { Text("Current Page") },
+                                modifier = Modifier.weight(1f),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                singleLine = true,
+                                isError = currentPageError != null,
+                                supportingText = {
+                                    currentPageError?.let {
+                                        Text(
+                                            it,
+                                            color = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                },
+                                enabled = book.pagination.toIntOrNull() != null
+                            )
+                            //plus page button
+                            IconButton(
+                                onClick = {
+                                    val current = book.currentPage.toIntOrNull() ?: -1
+                                    val totalPages = book.pagination.toIntOrNull()
+
+                                    if(totalPages != null){
+                                        if (current > -1 && current < totalPages) {
+                                            book = book.copy(currentPage = (current + 1).toString())
+                                        }else{
+                                            book = book.copy(currentPage = totalPages.toString())
+                                        }
+                                    }
+                                },
+                                enabled = book.pagination.toIntOrNull() != null
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = "Increase page")
+                            }
+                        }
+                    }
+                }
+
             }
 
             item {
