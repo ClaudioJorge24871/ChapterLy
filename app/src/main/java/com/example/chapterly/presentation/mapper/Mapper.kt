@@ -19,7 +19,7 @@ fun BookUIDataDTO.toDomain(): BookEntry{
         genres = emptyList(),
         publisher = publisher,
         publishYear = publishYear.toIntOrNull() ?: 0,
-        coverImageURL = coverImageURL
+        coverImageURL = coverImageURL,
     )
 
     //converting status
@@ -34,7 +34,8 @@ fun BookUIDataDTO.toDomain(): BookEntry{
         status = statusEnum,
         purchaseDate = purchaseDate.toLocalDateOrNull(),
         startDate = startDate.toLocalDateOrNull(),
-        endDate = endDate.toLocalDateOrNull()
+        endDate = endDate.toLocalDateOrNull(),
+        currentPage = currentPage.toIntOrNull() ?: 0
     )
 }
 
@@ -63,5 +64,6 @@ fun BookEntry.toUIData() = BookUIDataDTO (
     status = status.displayName,
     purchaseDate = purchaseDate.toString(),
     startDate = startDate.toString(),
-    endDate = endDate.toString()
+    endDate = endDate.toString(),
+    currentPage = currentPage.toString()
 )

@@ -17,4 +17,5 @@ data class BookEntry(
     val purchaseDate: LocalDate? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
+    val currentPage: Int = 0
 )

@@ -19,5 +19,6 @@ data class BookUIDataDTO(
     val status: String = "",
     val purchaseDate: String? = null,
     val startDate: String? = null,
-    val endDate: String? = null
+    val endDate: String? = null,
+    val currentPage: String = ""
 )

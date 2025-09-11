@@ -11,6 +11,7 @@ data class BookEntryEntity(
     val title: String,
     val author: String,
     val pagination: Int,
+    val currentPage: Int,
     val edition: Int?,
     val genres: String, // stored as CSV or JSON, then converted
     val publisher: String,
@@ -26,6 +27,7 @@ data class BookEntryEntity(
         "",
         "",
         "",
+        0,
         0,
         null,
         "",

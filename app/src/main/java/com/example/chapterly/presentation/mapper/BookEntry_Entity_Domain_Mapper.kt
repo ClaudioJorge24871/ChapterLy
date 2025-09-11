@@ -23,7 +23,8 @@ fun BookEntry.toEntity(): BookEntryEntity = BookEntryEntity(
     status = status.name,
     purchaseDate = purchaseDate?.toEpochMilli(),
     startDate = startDate?.toEpochMilli(),
-    endDate = endDate?.toEpochMilli()
+    endDate = endDate?.toEpochMilli(),
+    currentPage = currentPage
 )
 
 fun BookEntryEntity.toDomain(): BookEntry = BookEntry(
@@ -43,6 +44,7 @@ fun BookEntryEntity.toDomain(): BookEntry = BookEntry(
     purchaseDate = purchaseDate?.toLocalDate(),
     startDate = startDate?.toLocalDate(),
     endDate = endDate?.toLocalDate(),
+    currentPage = currentPage
 )
 
 
