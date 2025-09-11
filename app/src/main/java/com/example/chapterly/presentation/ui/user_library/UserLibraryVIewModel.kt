@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.use_case.DeleteUserBookUseCase
-import com.example.chapterly.domain.use_case.GetUserBookByISBNUseCase
+import com.example.chapterly.domain.use_case.GetUserBookByIDUseCase
 import com.example.chapterly.domain.use_case.GetUserBooksUseCase
 import com.example.chapterly.domain.use_case.SaveUserBookUseCase
 import com.example.chapterly.presentation.dto.BookUIDataDTO
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class UserLibraryViewModel @Inject constructor (
     private val deleteUserBookUseCase: DeleteUserBookUseCase,
     private val getUserBooksUseCase: GetUserBooksUseCase,
-    private val getUserBookByISBNUseCase: GetUserBookByISBNUseCase
+    private val getUserBookByIDUseCase: GetUserBookByIDUseCase
 ): ViewModel(){
 
     // StateFlow: Only the ViewModel can change it
@@ -54,12 +54,12 @@ class UserLibraryViewModel @Inject constructor (
      * Fetch a single book by ISBN and expose it through selectedBook StateFlow.
      * Uses Dispatchers.IO because the repository/DAO call may block.
      */
-    fun getUserBookByISBN(isbn: String) {
+    fun getUserBookByID(id: Int) {
         viewModelScope.launch {
             _selectedBook.value = Result.Loading
             val result = withContext(Dispatchers.IO) {
                 try {
-                    getUserBookByISBNUseCase(isbn)
+                    getUserBookByIDUseCase(id)
                 } catch (e: Exception) {
                     Result.Error(UnknownError(e.message ?: "Unknown"))
                 }

@@ -1,6 +1,7 @@
 package com.example.chapterly.data.repository
 
 import com.example.chapterly.data.local.dao.BookDao
+import com.example.chapterly.data.local.entities.BookEntryEntity
 import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.repository.UserLibraryRepository
@@ -33,9 +34,9 @@ class UserLibraryRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getBookByISBN(isbn: String): Result<BookEntry, Error> {
+    override fun getBookByID(id: Int): Result<BookEntry, Error> {
         return try{
-            val userBook = bookDao.getBookByISBN(isbn).toDomain()
+            val userBook = bookDao.getBookByID(id).toDomain()
             Result.Success(userBook)
         }catch (e: Exception){
             Result.Error(UnknownError(e.message ?: "Unknown"))
@@ -44,8 +45,10 @@ class UserLibraryRepositoryImpl @Inject constructor(
 
     override suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try {
-            bookDao.insertBook(userBook.toEntity())
-            Result.Success(userBook)
+            val entity = userBook.toEntity().copy(id = 0)
+            val newId = bookDao.insertBook(entity).toInt()
+            val savedBook = userBook.copy(book = userBook.book.copy(id = newId))
+            Result.Success(savedBook)
         }catch (e: Exception) {
             Result.Error(UnknownError(e.message ?: "Unknown"))
         }

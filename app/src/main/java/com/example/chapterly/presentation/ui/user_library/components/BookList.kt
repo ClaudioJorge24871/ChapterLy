@@ -39,7 +39,7 @@ import com.example.chapterly.domain.model.BookEntry
 @Composable
 fun BookList(
     books: List<BookEntry>,
-    onSelectedBook: (String) -> Unit
+    onSelectedBook: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // Two books per row
@@ -53,7 +53,7 @@ fun BookList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp),
-                onClick = {onSelectedBook(bookEntry.book.isbn)}
+                onClick = {onSelectedBook(bookEntry.book.id)}
             ){
                 Box(
                     modifier = Modifier

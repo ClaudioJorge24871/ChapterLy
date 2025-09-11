@@ -15,11 +15,11 @@ interface BookDao {
     @Query("SELECT * FROM book_entries")
     fun getAllBooks(): Flow<List<BookEntryEntity>>
 
-    @Query("SELECT * FROM book_entries WHERE isbn == :isbn")
-    fun getBookByISBN(isbn: String): BookEntryEntity
+    @Query("SELECT * FROM book_entries WHERE id == :id LIMIT 1")
+    fun getBookByID(id: Int): BookEntryEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBook(book: BookEntryEntity)
+    suspend fun insertBook(book: BookEntryEntity): Long
 
     @Update
     suspend fun updateBook(book: BookEntryEntity)

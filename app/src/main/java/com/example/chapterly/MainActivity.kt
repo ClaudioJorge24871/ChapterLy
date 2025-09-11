@@ -54,10 +54,8 @@ class MainActivity : ComponentActivity() {
                             UserLibraryRoute(
                                 viewModel = userLibraryViewModel,
                                 onAddBookClick = {navController.navigate("saveBook")},
-                                onSelectedBook = { isbn ->
-                                    // encode in case isbn contains special chars
-                                    //val encoded = Uri.encode(isbn)
-                                    navController.navigate("updateBook/$isbn")
+                                onSelectedBook = { id ->
+                                    navController.navigate("updateBook/$id")
                                 }
                             )
                         }
@@ -77,10 +75,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable( "updateBook/{isbn}" ){ backStackEntry ->
-                            val isbn = backStackEntry.arguments?.getString("isbn") ?: return@composable
-                            LaunchedEffect(isbn) {
-                                userLibraryViewModel.getUserBookByISBN(isbn)
+                        composable( "updateBook/{id}" ){ backStackEntry ->
+                            val fetchedId = backStackEntry.arguments?.getString("id") ?: return@composable
+                            val id = fetchedId.toInt()
+
+                            LaunchedEffect(id) {
+                                userLibraryViewModel.getUserBookByID(id.toInt())
                             }
 
                             val selectedResult by userLibraryViewModel.selectedBook.collectAsState()

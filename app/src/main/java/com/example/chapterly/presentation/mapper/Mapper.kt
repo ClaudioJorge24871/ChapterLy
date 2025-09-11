@@ -6,11 +6,11 @@ import com.example.chapterly.domain.model.Status
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.Date
 import java.util.Locale
 
 fun BookUIDataDTO.toDomain(): BookEntry{
     val book = Book(
+        id = id,
         isbn = isbn,
         title = title,
         author = author,
@@ -50,6 +50,7 @@ fun String?.toLocalDateOrNull(): LocalDate? {
 }
 
 fun BookEntry.toUIData() = BookUIDataDTO (
+    id = book.id,
     isbn = book.isbn,
     title = book.title,
     author = book.author,

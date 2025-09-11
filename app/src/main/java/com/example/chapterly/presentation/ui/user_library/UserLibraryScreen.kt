@@ -43,7 +43,7 @@ import org.intellij.lang.annotations.JdkConstants
 fun UserLibraryScreen(
     viewModel: UserLibraryViewModel,
     onAddBookClick: () -> Unit,
-    onSelectedBook: (String) -> Unit
+    onSelectedBook: (Int) -> Unit
 ) {
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
@@ -103,7 +103,7 @@ fun UserLibraryScreen(
                     }else{
                         BookList(
                             books = result.data,
-                            onSelectedBook = { isbn -> onSelectedBook(isbn) }
+                            onSelectedBook = { id -> onSelectedBook(id) }
                         )
                     }
                 }

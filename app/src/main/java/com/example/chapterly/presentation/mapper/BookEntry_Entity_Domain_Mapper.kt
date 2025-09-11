@@ -5,12 +5,12 @@ import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.model.Status
 import java.time.Instant
-import java.util.Date
 
 import java.time.LocalDate
 import java.time.ZoneId
 
 fun BookEntry.toEntity(): BookEntryEntity = BookEntryEntity(
+    id = book.id,
     isbn = book.isbn,
     title = book.title,
     author = book.author,
@@ -28,6 +28,7 @@ fun BookEntry.toEntity(): BookEntryEntity = BookEntryEntity(
 
 fun BookEntryEntity.toDomain(): BookEntry = BookEntry(
     book = Book(
+        id = id,
         isbn = isbn,
         title = title,
         author = author,

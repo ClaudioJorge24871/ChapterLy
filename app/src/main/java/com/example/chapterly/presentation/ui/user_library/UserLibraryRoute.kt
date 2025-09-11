@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 fun UserLibraryRoute(
     onAddBookClick: () -> Unit,
     viewModel: UserLibraryViewModel = hiltViewModel(),
-    onSelectedBook: (String) -> Unit
+    onSelectedBook: (Int) -> Unit
 ){
     UserLibraryScreen(
         viewModel = viewModel,

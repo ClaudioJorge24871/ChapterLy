@@ -3,6 +3,7 @@ package com.example.chapterly.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName = "book_entries")
 data class BookEntryEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
@@ -19,4 +20,22 @@ data class BookEntryEntity(
     val purchaseDate: Long?, // store as timestamp
     val startDate: Long?,
     val endDate: Long?
-)
+){
+    constructor() : this(
+        0,
+        "",
+        "",
+        "",
+        0,
+        null,
+        "",
+        "",
+        0,
+        "",
+        "",
+        null,
+        null,
+        null
+    )
+}
+

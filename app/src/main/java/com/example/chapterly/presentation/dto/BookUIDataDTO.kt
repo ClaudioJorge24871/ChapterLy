@@ -5,6 +5,7 @@ package com.example.chapterly.presentation.dto
  * Mirrors user-facing fields, usually Strings (from TextFields).
  */
 data class BookUIDataDTO(
+    val id: Int = 0,
     val isbn: String = "",
     val title: String = "",
     val author: String = "",
