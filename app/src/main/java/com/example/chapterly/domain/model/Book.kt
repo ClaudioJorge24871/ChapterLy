@@ -10,7 +10,7 @@ data class Book(
     val author: String,
     val pagination: Int,
     val edition: Int? = null,
-    val genres: List<Genre>,
+    val genres: Set<Genre>,
     val publisher: String,
     val publishYear: Int,
     val coverImageURL: String

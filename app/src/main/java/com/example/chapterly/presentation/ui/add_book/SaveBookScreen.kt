@@ -40,9 +40,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
+import com.example.chapterly.domain.model.Genre
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toLocalDateOrNull
+import com.example.chapterly.presentation.ui.add_book.components.GenreSelector
 import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.presentation.ui.common.helper.snackBarSaveBookValidation
 
@@ -250,7 +252,14 @@ fun SaveBookScreen(
                     ){
                         Text(text = "Other Data", style = MaterialTheme.typography.titleMedium)
                         // Status
+
                         // Genres
+                        GenreSelector(
+                            selectedGenres = book.genres,
+                            onSelectionChanged = {newGenres ->
+                                book = book.copy(genres = newGenres)
+                            }
+                        )
                         // Current Page
                         Row(
                             modifier = Modifier.fillMaxWidth(),

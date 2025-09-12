@@ -50,6 +50,9 @@ dependencies {
     // Kotlin Extensions and Coroutines support (ROOM)
     implementation("androidx.room:room-ktx:${room_version}")
 
+    //Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
     //Compose navigation
     val nav_version = "2.9.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
