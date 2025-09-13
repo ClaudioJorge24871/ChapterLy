@@ -73,8 +73,7 @@ class UserLibraryRepositoryImpl @Inject constructor(
     override suspend fun updateUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try{
             val genresJson = Json.encodeToString(userBook.book.genres.toList())
-            /*TODO make the update store the genres if they change. this is probably somthing on Savebookscreen*/
-            val entity = userBook.toEntity().copy(id = 0, genres = genresJson)
+            val entity = userBook.toEntity().copy(id = userBook.book.id, genres = genresJson)
 
             bookDao.updateBook(entity)
             Result.Success(userBook)

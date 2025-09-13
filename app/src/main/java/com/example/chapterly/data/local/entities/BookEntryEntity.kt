@@ -13,7 +13,7 @@ data class BookEntryEntity(
     val pagination: Int,
     val currentPage: Int,
     val edition: Int?,
-    val genres: String, // stored as CSV or JSON, then converted
+    val genres: String, // stored as JSON, then converted
     val publisher: String,
     val publishYear: Int,
     val coverImageURL: String,
