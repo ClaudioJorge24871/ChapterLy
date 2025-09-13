@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -41,10 +42,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.model.Genre
+import com.example.chapterly.domain.model.Status
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toLocalDateOrNull
 import com.example.chapterly.presentation.ui.add_book.components.GenreSelector
+import com.example.chapterly.presentation.ui.add_book.components.StatusDropDown
 import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.presentation.ui.common.helper.snackBarSaveBookValidation
 
@@ -252,7 +255,12 @@ fun SaveBookScreen(
                     ){
                         Text(text = "Other Data", style = MaterialTheme.typography.titleMedium)
                         // Status
-
+                        StatusDropDown(
+                            selectedStatus = book.status,
+                            onStatusSelected = { status ->
+                                book = book.copy(status = status.displayName)
+                            }
+                        )
                         // Genres
                         GenreSelector(
                             selectedGenres = book.genres,
