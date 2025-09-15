@@ -70,6 +70,9 @@ dependencies {
     //Remote Libraries
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
 
+    implementation("androidx.compose.material:material-icons-extended")
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

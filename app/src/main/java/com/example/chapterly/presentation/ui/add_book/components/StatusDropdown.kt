@@ -5,13 +5,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.Status
 import kotlin.math.exp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatusDropDown(
     selectedStatus: String,
@@ -30,26 +36,28 @@ fun StatusDropDown(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column {
-        Row (
-            modifier = Modifier.clickable { expanded = true }
-        ){
-            Text(text = "Status: ", style = MaterialTheme.typography.titleMedium)
-            Text(
-                text = selectedStatus.ifBlank { "To Read" },)
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Expand"
-            )
-        }
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        OutlinedTextField(
+            value = selectedStatus.ifBlank { "To Read" },
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Status") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
 
-        DropdownMenu(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
+            onDismissRequest = { expanded = false }
         ) {
             Status.entries.forEach { status ->
                 DropdownMenuItem(
-                    text = { Text(text = status.displayName) },
+                    text = { Text(status.displayName) },
                     onClick = {
                         onStatusSelected(status)
                         expanded = false
@@ -58,6 +66,4 @@ fun StatusDropDown(
             }
         }
     }
-
-
 }

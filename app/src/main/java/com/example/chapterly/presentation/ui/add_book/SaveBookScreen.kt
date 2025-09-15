@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +51,9 @@ import com.example.chapterly.presentation.ui.add_book.components.GenreSelector
 import com.example.chapterly.presentation.ui.add_book.components.StatusDropDown
 import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.presentation.ui.common.helper.snackBarSaveBookValidation
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +128,9 @@ fun SaveBookScreen(
                         Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Book Info", style = MaterialTheme.typography.titleMedium)
+                        // TODO add a row on icon and title
+                        Icon(Icons.AutoMirrored.Default.MenuBook, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Text("Book", style = MaterialTheme.typography.titleMedium)
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -251,9 +257,9 @@ fun SaveBookScreen(
                 Card(modifier = Modifier.fillMaxWidth()){
                     Column(
                         Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
                     ){
-                        Text(text = "Other Data", style = MaterialTheme.typography.titleMedium)
+                        Text(text = "Status", style = MaterialTheme.typography.titleMedium)
                         // Status
                         StatusDropDown(
                             selectedStatus = book.status,
