@@ -15,6 +15,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -133,9 +136,11 @@ fun SaveBookScreen(
                         Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // TODO add a row on icon and title
-                        Icon(Icons.AutoMirrored.Default.MenuBook, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                        Text("Book", style = MaterialTheme.typography.titleMedium)
+                        Row{
+                            Icon(Icons.AutoMirrored.Default.MenuBook, contentDescription = "Book")
+                            Text(" Book", style = MaterialTheme.typography.titleMedium)
+                        }
+
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -180,7 +185,10 @@ fun SaveBookScreen(
                         Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Publication", style = MaterialTheme.typography.titleMedium)
+                        Row{
+                            Icon(imageVector = Icons.Default.LibraryBooks, contentDescription = "Publication")
+                            Text(" Publication", style = MaterialTheme.typography.titleMedium)
+                        }
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -274,7 +282,11 @@ fun SaveBookScreen(
                         Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ){
-                        Text(text = "Status", style = MaterialTheme.typography.titleMedium)
+                        Row{
+                            Icon(imageVector = Icons.Default.CheckCircle, contentDescription = "Status")
+                            Text(text = " Status", style = MaterialTheme.typography.titleMedium)
+                        }
+
                         // Status
                         StatusDropDown(
                             selectedStatus = book.status,
@@ -357,7 +369,11 @@ fun SaveBookScreen(
                         Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Dates", style = MaterialTheme.typography.titleMedium)
+                        Row{
+                            Icon(imageVector = Icons.Default.CalendarMonth, contentDescription = "Dates")
+                            Text(" Dates", style = MaterialTheme.typography.titleMedium)
+                        }
+
                         DateField(
                             label = "Purchase Date",
                             date = book.purchaseDate.toLocalDateOrNull(),
