@@ -14,4 +14,5 @@ enum class Genre(val displayName: String) {
     ROMANCE("Romance"),
     THRILLER("Thriller"),
     CHILDREN("Children")
+    //TODO change from enum to add new genres if wanted
 }
