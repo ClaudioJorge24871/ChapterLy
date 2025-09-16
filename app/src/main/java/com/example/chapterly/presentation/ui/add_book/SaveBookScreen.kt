@@ -65,8 +65,12 @@ fun SaveBookScreen(
     initialBook: BookUIDataDTO = BookUIDataDTO(),
     isEdit: Boolean = false
 ) {
-    val context = LocalContext.current
-    var book by remember { mutableStateOf(initialBook) }
+    LaunchedEffect(initialBook.id) {
+        if (initialBook.id != 0 && viewModel.book.id == 0){
+            viewModel.initBook(initialBook)
+        }
+    }
+    val book = viewModel.book
     val saveEvent by viewModel.saveEvent.collectAsState(initial = null)
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -137,7 +141,9 @@ fun SaveBookScreen(
                         ) {
                             OutlinedTextField(
                                 value = book.title,
-                                onValueChange = { book = book.copy(title = it) },
+                                onValueChange = { newTitle ->
+                                    viewModel.updateField { it.copy(title = newTitle) }
+                                },
                                 label = { Text("Title") },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true,
@@ -145,7 +151,9 @@ fun SaveBookScreen(
                             )
                             OutlinedTextField(
                                 value = book.author,
-                                onValueChange = { book = book.copy(author = it) },
+                                onValueChange = { newAuthor ->
+                                    viewModel.updateField { it.copy(author = newAuthor) }
+                                },
                                 label = { Text("Author") },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true,
@@ -154,7 +162,9 @@ fun SaveBookScreen(
                         }
                         OutlinedTextField(
                             value = book.isbn,
-                            onValueChange = { book = book.copy(isbn = it) },
+                            onValueChange = { newIsbn ->
+                                viewModel.updateField { it.copy(isbn = newIsbn) }
+                            },
                             label = { Text("ISBN") },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
@@ -176,7 +186,9 @@ fun SaveBookScreen(
                         ) {
                             OutlinedTextField(
                                 value = book.publisher,
-                                onValueChange = { book = book.copy(publisher = it) },
+                                onValueChange = { newPublisher ->
+                                    viewModel.updateField { it.copy(publisher = newPublisher) }
+                                },
                                 label = { Text("Publisher") },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true
@@ -187,10 +199,10 @@ fun SaveBookScreen(
                                     if (newValue.all { it.isDigit() }) {
                                         if (newValue.length > 4) {
                                             yearError = "Year must be 4 digits"
-                                            book = book.copy(publishYear = newValue.take(4))
+                                            viewModel.updateField { it.copy(publishYear = newValue.take(4)) }
                                         } else {
                                             yearError = null
-                                            book = book.copy(publishYear = newValue)
+                                            viewModel.updateField { it.copy(publishYear = newValue) }
                                         }
                                     }
                                 },
@@ -215,7 +227,9 @@ fun SaveBookScreen(
                         ) {
                             OutlinedTextField(
                                 value = book.edition ?: "",
-                                onValueChange = { book = book.copy(edition = it) },
+                                onValueChange = { newEdition ->
+                                    viewModel.updateField { it.copy(edition = newEdition) }
+                                },
                                 label = { Text("Edition") },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true
@@ -226,10 +240,10 @@ fun SaveBookScreen(
                                     if (newValue.all { it.isDigit() }) {
                                         if (newValue.length > 5) {
                                             paginationError = "Max 5 digits"
-                                            book = book.copy(pagination = newValue.take(5))
+                                            viewModel.updateField { it.copy(pagination = newValue.take(5)) }
                                         } else {
                                             paginationError = null
-                                            book = book.copy(pagination = newValue)
+                                            viewModel.updateField { it.copy(pagination = newValue) }
                                         }
                                     }
                                 },
@@ -264,14 +278,14 @@ fun SaveBookScreen(
                         StatusDropDown(
                             selectedStatus = book.status,
                             onStatusSelected = { status ->
-                                book = book.copy(status = status.displayName)
+                                viewModel.updateField { it.copy(status = status.displayName) }
                             }
                         )
                         // Genres
                         GenreSelector(
                             selectedGenres = book.genres,
                             onSelectionChanged = {newGenres ->
-                                book = book.copy(genres = newGenres)
+                                viewModel.updateField { it.copy(genres = newGenres) }
                             }
                         )
                         // Current Page
@@ -289,10 +303,10 @@ fun SaveBookScreen(
 
                                         if (newPage != null && totalPages != null && newPage > totalPages) {
                                             currentPageError = "Current page cannot be above the pagination"
-                                            book = book.copy(currentPage = totalPages.toString())
+                                            viewModel.updateField { it.copy(currentPage = totalPages.toString()) }
                                         } else {
                                             currentPageError = null
-                                            book = book.copy(currentPage = newValue)
+                                            viewModel.updateField { it.copy(currentPage = newValue) }
                                         }
                                     }
                                 },
@@ -319,9 +333,9 @@ fun SaveBookScreen(
 
                                     if(totalPages != null){
                                         if (current > -1 && current < totalPages) {
-                                            book = book.copy(currentPage = (current + 1).toString())
+                                            viewModel.updateField { it.copy(currentPage = (current + 1).toString()) }
                                         }else{
-                                            book = book.copy(currentPage = totalPages.toString())
+                                            viewModel.updateField { it.copy(currentPage = totalPages.toString()) }
                                         }
                                     }
                                 },
@@ -347,7 +361,7 @@ fun SaveBookScreen(
                             label = "Purchase Date",
                             date = book.purchaseDate.toLocalDateOrNull(),
                             onDateSelected = { selected ->
-                                book = book.copy(purchaseDate = selected.toString())
+                                viewModel.updateField { it.copy(purchaseDate = selected.toString()) }
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -355,7 +369,7 @@ fun SaveBookScreen(
                             label = "Start Date",
                             date = book.startDate.toLocalDateOrNull(),
                             onDateSelected = { selected ->
-                                book = book.copy(startDate = selected.toString())
+                                viewModel.updateField { it.copy(startDate = selected.toString()) }
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -363,7 +377,7 @@ fun SaveBookScreen(
                             label = "End Date",
                             date = book.endDate.toLocalDateOrNull(),
                             onDateSelected = { selected ->
-                                book = book.copy(endDate = selected.toString())
+                                viewModel.updateField { it.copy(endDate = selected.toString()) }
                             },
                             modifier = Modifier.fillMaxWidth()
                         )

@@ -80,7 +80,10 @@ class UserLibraryViewModel @Inject constructor (
         viewModelScope.launch {
             val entry = uiData.toDomain()
             when(val result = deleteUserBookUseCase(entry)) {
-                is Result.Success -> loadBooks()
+                is Result.Success -> {
+                    clearSelectedBook()
+                    loadBooks()
+                }
                 is Result.Error -> {
                     //TODO update UI error state or log
                 }
