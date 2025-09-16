@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toUIData
 import com.example.chapterly.presentation.ui.add_book.SaveBookScreen
 import com.example.chapterly.presentation.ui.add_book.SaveBookViewModel
@@ -54,10 +55,8 @@ class MainActivity : ComponentActivity() {
                             UserLibraryRoute(
                                 viewModel = userLibraryViewModel,
                                 onAddBookClick = {navController.navigate("saveBook")},
-                                onSelectedBook = { isbn ->
-                                    // encode in case isbn contains special chars
-                                    //val encoded = Uri.encode(isbn)
-                                    navController.navigate("updateBook/$isbn")
+                                onSelectedBook = { id ->
+                                    navController.navigate("updateBook/$id")
                                 }
                             )
                         }
@@ -65,18 +64,27 @@ class MainActivity : ComponentActivity() {
                             SaveBookScreen(
                                 viewModel = saveBookViewModel,
                                 onBookSaved = {
+                                    saveBookViewModel.clearBook()
                                     userLibraryViewModel.loadBooks() // explicit refresh
                                     navController.popBackStack()
                                 },
+                                onDeleteBook = { bookEntry ->
+                                    saveBookViewModel.clearBook()
+                                    userLibraryViewModel.deleteBook(bookEntry.toUIData())
+                                    navController.popBackStack()
+                                },
                                 onGoBackClicked = {
+                                    saveBookViewModel.clearBook()
                                     navController.popBackStack()
                                 }
                             )
                         }
-                        composable( "updateBook/{isbn}" ){ backStackEntry ->
-                            val isbn = backStackEntry.arguments?.getString("isbn") ?: return@composable
-                            LaunchedEffect(isbn) {
-                                userLibraryViewModel.getUserBookByISBN(isbn)
+                        composable( "updateBook/{id}" ){ backStackEntry ->
+                            val fetchedId = backStackEntry.arguments?.getString("id") ?: return@composable
+                            val id = fetchedId.toInt()
+
+                            LaunchedEffect(id) {
+                                userLibraryViewModel.getUserBookByID(id.toInt())
                             }
 
                             val selectedResult by userLibraryViewModel.selectedBook.collectAsState()
@@ -84,6 +92,7 @@ class MainActivity : ComponentActivity() {
                                 null -> {}
                                 is Result.Loading -> {
                                     // show loading UI
+                                    /*TODO Rearrange the loading icon. Needs to be bigger and in the center of screen**/
                                     androidx.compose.material3.CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                                 }
                                 is Result.Success -> {
@@ -94,11 +103,18 @@ class MainActivity : ComponentActivity() {
                                         viewModel = saveBookViewModel,
                                         selectedBook = initialBookUI,
                                         onBookUpdated = {
+                                            saveBookViewModel.clearBook()
                                             userLibraryViewModel.loadBooks()
                                             userLibraryViewModel.clearSelectedBook()
                                             navController.popBackStack()
                                         },
+                                        onDeleteBook = { bookEntry ->
+                                            saveBookViewModel.clearBook()
+                                            userLibraryViewModel.deleteBook(bookEntry.toUIData())
+                                            navController.popBackStack()
+                                        },
                                         onGoBackClicked = {
+                                            saveBookViewModel.clearBook()
                                             userLibraryViewModel.clearSelectedBook()
                                             navController.popBackStack()
                                         }

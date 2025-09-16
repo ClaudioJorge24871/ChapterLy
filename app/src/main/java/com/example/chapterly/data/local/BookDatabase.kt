@@ -7,7 +7,7 @@ import com.example.chapterly.data.local.entities.BookEntryEntity
 
 @Database(
     entities = [BookEntryEntity::class],
-    version = 1,
+    version = 5,
     exportSchema = false
 )
 abstract class BookDatabase : RoomDatabase() {

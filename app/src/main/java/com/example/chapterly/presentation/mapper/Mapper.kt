@@ -5,20 +5,21 @@ import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.Status
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
 import java.util.Locale
 
 fun BookUIDataDTO.toDomain(): BookEntry{
     val book = Book(
+        id = id,
         isbn = isbn,
         title = title,
         author = author,
         pagination = pagination.toIntOrNull() ?: 0,
         edition = edition?.toIntOrNull(),
-        genres = emptyList(),
+        genres = genres.toSet(),
         publisher = publisher,
         publishYear = publishYear.toIntOrNull() ?: 0,
-        coverImageURL = coverImageURL
+        coverImageURL = coverImageURL,
     )
 
     //converting status
@@ -31,35 +32,38 @@ fun BookUIDataDTO.toDomain(): BookEntry{
     return BookEntry(
         book = book,
         status = statusEnum,
-        purchaseDate = purchaseDate.toDateOrNull(),
-        startDate = startDate.toDateOrNull(),
-        endDate = endDate.toDateOrNull()
+        purchaseDate = purchaseDate.toLocalDateOrNull(),
+        startDate = startDate.toLocalDateOrNull(),
+        endDate = endDate.toLocalDateOrNull(),
+        currentPage = currentPage.toIntOrNull() ?: 0
     )
 }
 
 private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-private fun String?.toDateOrNull(): Date? {
+fun String?.toLocalDateOrNull(): LocalDate? {
     if (this.isNullOrBlank()) return null
     return try{
-        dateFormat.parse(this)
+        LocalDate.parse(this)
     }catch(e: Exception){
         null
     }
 }
 
 fun BookEntry.toUIData() = BookUIDataDTO (
+    id = book.id,
     isbn = book.isbn,
     title = book.title,
     author = book.author,
     pagination = book.pagination.toString(),
     edition = book.edition?.toString(),
-    genres = emptyList(),
+    genres = book.genres,
     publisher = book.publisher,
     publishYear = book.publishYear.toString(),
     coverImageURL = book.coverImageURL,
     status = status.displayName,
-    purchaseDate = null,
-    startDate = null,
-    endDate = null
+    purchaseDate = purchaseDate.toString(),
+    startDate = startDate.toString(),
+    endDate = endDate.toString(),
+    currentPage = currentPage.toString()
 )

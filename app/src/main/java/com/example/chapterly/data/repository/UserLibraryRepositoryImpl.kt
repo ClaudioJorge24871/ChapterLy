@@ -1,8 +1,10 @@
 package com.example.chapterly.data.repository
 
 import com.example.chapterly.data.local.dao.BookDao
+import com.example.chapterly.data.local.entities.BookEntryEntity
 import com.example.chapterly.domain.model.Book
 import com.example.chapterly.domain.model.BookEntry
+import com.example.chapterly.domain.model.Genre
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toEntity
@@ -16,10 +18,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class UserLibraryRepositoryImpl @Inject constructor(
-    private val bookDao: BookDao
+    private val bookDao: BookDao,
 ): UserLibraryRepository {
 
     override fun getUserBooks(): Flow<Result<List<BookEntry>, Error>> = flow {
@@ -33,10 +37,18 @@ class UserLibraryRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getBookByISBN(isbn: String): Result<BookEntry, Error> {
+    override fun getBookByID(id: Int): Result<BookEntry, Error> {
         return try{
-            val userBook = bookDao.getBookByISBN(isbn).toDomain()
-            Result.Success(userBook)
+            val entity = bookDao.getBookByID(id)
+
+            //Decode the JSON string from DB into Set<Genre>
+            val decodedGenres: Set<Genre> =
+                Json.decodeFromString<List<Genre>>(entity.genres).toSet()
+
+            val domain = entity.toDomain().copy(
+                book = entity.toDomain().book.copy(genres = decodedGenres)
+            )
+            Result.Success(domain)
         }catch (e: Exception){
             Result.Error(UnknownError(e.message ?: "Unknown"))
         }
@@ -44,8 +56,15 @@ class UserLibraryRepositoryImpl @Inject constructor(
 
     override suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try {
-            bookDao.insertBook(userBook.toEntity())
-            Result.Success(userBook)
+            // Parse Set<Genre> to JSON String
+            val genresJson = Json.encodeToString(userBook.book.genres.toList())
+
+            val entity = userBook.toEntity().copy(id = 0, genres = genresJson)
+
+
+            val newId = bookDao.insertBook(entity).toInt()
+            val savedBook = userBook.copy(book = userBook.book.copy(id = newId))
+            Result.Success(savedBook)
         }catch (e: Exception) {
             Result.Error(UnknownError(e.message ?: "Unknown"))
         }
@@ -53,7 +72,10 @@ class UserLibraryRepositoryImpl @Inject constructor(
 
     override suspend fun updateUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try{
-            bookDao.updateBook(userBook.toEntity())
+            val genresJson = Json.encodeToString(userBook.book.genres.toList())
+            val entity = userBook.toEntity().copy(id = userBook.book.id, genres = genresJson)
+
+            bookDao.updateBook(entity)
             Result.Success(userBook)
         }catch (e:Exception) {
             Result.Error(

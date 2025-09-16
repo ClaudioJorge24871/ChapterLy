@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    // Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
@@ -49,16 +50,28 @@ dependencies {
     // Kotlin Extensions and Coroutines support (ROOM)
     implementation("androidx.room:room-ktx:${room_version}")
 
+    //Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    //Compose navigation
     val nav_version = "2.9.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    //Hilt DI
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-compiler:2.52")
 
+    // Coroutines
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
+    //Remote Libraries
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+
+    implementation("androidx.compose.material:material-icons-extended")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

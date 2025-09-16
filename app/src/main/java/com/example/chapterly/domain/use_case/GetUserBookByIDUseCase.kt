@@ -6,10 +6,10 @@ import javax.inject.Inject
 import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
 
-class GetUserBookByISBNUseCase @Inject constructor(
+class GetUserBookByIDUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository
 ){
-    operator fun invoke(isbn: String): Result<BookEntry, Error> {
-        return userLibraryRepository.getBookByISBN(isbn)
+    operator fun invoke(id: Int): Result<BookEntry, Error> {
+        return userLibraryRepository.getBookByID(id)
     }
 }
