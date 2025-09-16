@@ -3,8 +3,10 @@ package com.example.chapterly.presentation.ui.add_book
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -287,20 +290,6 @@ fun SaveBookScreen(
                             Text(text = " Status", style = MaterialTheme.typography.titleMedium)
                         }
 
-                        // Status
-                        StatusDropDown(
-                            selectedStatus = book.status,
-                            onStatusSelected = { status ->
-                                viewModel.updateField { it.copy(status = status.displayName) }
-                            }
-                        )
-                        // Genres
-                        GenreSelector(
-                            selectedGenres = book.genres,
-                            onSelectionChanged = {newGenres ->
-                                viewModel.updateField { it.copy(genres = newGenres) }
-                            }
-                        )
                         // Current Page
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -357,6 +346,25 @@ fun SaveBookScreen(
                                 Icon(Icons.Default.Add, contentDescription = "Increase page")
                             }
                         }
+
+                        // Status
+                        StatusDropDown(
+                            selectedStatus = book.status,
+                            onStatusSelected = { status ->
+                                viewModel.updateField { it.copy(status = status.displayName) }
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Divider(thickness = 2.dp)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        // Genres
+                        GenreSelector(
+                            selectedGenres = book.genres,
+                            onSelectionChanged = {newGenres ->
+                                viewModel.updateField { it.copy(genres = newGenres) }
+                            }
+                        )
+
                     }
                 }
 
