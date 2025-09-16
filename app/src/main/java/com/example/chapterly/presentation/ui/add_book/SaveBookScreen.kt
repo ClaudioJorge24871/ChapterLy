@@ -1,5 +1,6 @@
 package com.example.chapterly.presentation.ui.add_book
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -87,6 +88,8 @@ fun SaveBookScreen(
     var titleError by rememberSaveable { mutableStateOf(false) }
     var authorError by rememberSaveable { mutableStateOf(false) }
     var currentPageError by remember {mutableStateOf<String?>(null)}
+
+
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -416,6 +419,13 @@ fun SaveBookScreen(
                 }
             }
         }
+
+        BackHandler {
+            //TODO check if the user really wants to go back if the fields have data. Same for the arrow on the top app bar
+            onGoBackClicked()
+            viewModel.clearBook()
+        }
+
         LaunchedEffect(saveEvent) {
             saveEvent?.let { onBookSaved() }
         }
