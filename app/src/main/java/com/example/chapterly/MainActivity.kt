@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toUIData
 import com.example.chapterly.presentation.ui.add_book.SaveBookScreen
 import com.example.chapterly.presentation.ui.add_book.SaveBookViewModel
@@ -63,14 +64,17 @@ class MainActivity : ComponentActivity() {
                             SaveBookScreen(
                                 viewModel = saveBookViewModel,
                                 onBookSaved = {
+                                    saveBookViewModel.clearBook()
                                     userLibraryViewModel.loadBooks() // explicit refresh
                                     navController.popBackStack()
                                 },
                                 onDeleteBook = { bookEntry ->
+                                    saveBookViewModel.clearBook()
                                     userLibraryViewModel.deleteBook(bookEntry.toUIData())
                                     navController.popBackStack()
                                 },
                                 onGoBackClicked = {
+                                    saveBookViewModel.clearBook()
                                     navController.popBackStack()
                                 }
                             )
@@ -99,15 +103,18 @@ class MainActivity : ComponentActivity() {
                                         viewModel = saveBookViewModel,
                                         selectedBook = initialBookUI,
                                         onBookUpdated = {
+                                            saveBookViewModel.clearBook()
                                             userLibraryViewModel.loadBooks()
                                             userLibraryViewModel.clearSelectedBook()
                                             navController.popBackStack()
                                         },
                                         onDeleteBook = { bookEntry ->
+                                            saveBookViewModel.clearBook()
                                             userLibraryViewModel.deleteBook(bookEntry.toUIData())
                                             navController.popBackStack()
                                         },
                                         onGoBackClicked = {
+                                            saveBookViewModel.clearBook()
                                             userLibraryViewModel.clearSelectedBook()
                                             navController.popBackStack()
                                         }
