@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.model.Genre
 import com.example.chapterly.domain.model.Status
@@ -58,8 +59,7 @@ import com.example.chapterly.presentation.ui.add_book.components.GenreSelector
 import com.example.chapterly.presentation.ui.add_book.components.StatusDropDown
 import com.example.chapterly.presentation.ui.common.DateField
 import com.example.chapterly.presentation.ui.common.helper.snackBarSaveBookValidation
-
-
+import kotlin.takeIf
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -256,6 +256,9 @@ fun SaveBookScreen(
                                         } else {
                                             paginationError = null
                                             viewModel.updateField { it.copy(pagination = newValue) }
+                                            book.currentPage.toIntOrNull()?.takeIf { it > newValue.toInt() }?.let {
+                                                viewModel.updateField { it.copy(currentPage = newValue) }
+                                            }
                                         }
                                     }
                                 },
@@ -352,6 +355,9 @@ fun SaveBookScreen(
                             selectedStatus = book.status,
                             onStatusSelected = { status ->
                                 viewModel.updateField { it.copy(status = status.displayName) }
+                                if (status == Status.FINISHED) {
+                                    viewModel.updateField { it.copy(currentPage = (book.pagination.ifBlank { 0 }).toString()) }
+                                }
                             }
                         )
                         Spacer(modifier = Modifier.height(4.dp))
