@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,8 +78,8 @@ fun SaveBookScreen(
     val coroutineScope = rememberCoroutineScope()
     var yearError by remember { mutableStateOf<String?>(null) }
     var paginationError by remember { mutableStateOf<String?>(null) }
-    var titleError by remember { mutableStateOf(false) }
-    var authorError by remember { mutableStateOf(false) }
+    var titleError by rememberSaveable { mutableStateOf(false) }
+    var authorError by rememberSaveable { mutableStateOf(false) }
     var currentPageError by remember {mutableStateOf<String?>(null)}
 
     Scaffold(
