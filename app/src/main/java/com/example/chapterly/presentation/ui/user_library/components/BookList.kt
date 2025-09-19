@@ -23,7 +23,10 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkAdd
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -44,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.chapterly.domain.model.BookEntry
+import com.example.chapterly.domain.model.Status
 
 @Composable
 fun BookList(
@@ -126,7 +130,11 @@ fun BookList(
                         .size(40.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Bookmark,
+                        imageVector = when(bookEntry.status){
+                            Status.TO_READ -> Icons.Default.BookmarkAdd
+                            Status.READING ->  Icons.Default.AutoStories
+                            Status.FINISHED -> Icons.Default.CheckCircle
+                        },
                         contentDescription = null,
                         tint = Color.White
                     )
