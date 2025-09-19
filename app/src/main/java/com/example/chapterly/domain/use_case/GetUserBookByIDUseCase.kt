@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class GetUserBookByIDUseCase @Inject constructor(
     private val userLibraryRepository: UserLibraryRepository
 ){
-    operator fun invoke(id: Int): Flow<Result<BookEntry, Error>> {
+    operator fun invoke(id: Int): Result<BookEntry, Error> {
         return userLibraryRepository.getBookByID(id)
     }
 }

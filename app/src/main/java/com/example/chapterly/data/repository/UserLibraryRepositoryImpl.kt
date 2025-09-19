@@ -38,27 +38,25 @@ class UserLibraryRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getBookByID(id: Int): Flow<Result<BookEntry, Error>> = flow{
-        try {
-            emitAll(
-                bookDao.getBookByID(id)
-                    .map{
-                        entity ->
-                            if(entity != null){
-                                val decodedGenres = Json.decodeFromString<List<Genre>>(entity.genres).toSet()
-                                val domain = entity.toDomain().copy(
-                                    book = entity.toDomain().book.copy(genres = decodedGenres)
-                                )
-                                Result.Success(domain)
-                            }else{
-                                Result.Error(UnknownError("Book with id $id not found"))
-                            }
-                    }
-            )
+    override fun getBookByID(id: Int): Result<BookEntry, Error> {
+        return try{
+            val entity = bookDao.getBookByID(id)
+            if (entity != null){
+                //Decode the JSON string from DB into Set<Genre>
+                val decodedGenres: Set<Genre> =
+                    Json.decodeFromString<List<Genre>>(entity.genres).toSet()
+
+                val domain = entity.toDomain().copy(
+                    book = entity.toDomain().book.copy(genres = decodedGenres))
+                Result.Success(domain)
+            }else{
+                Result.Error(BookNotFoundError("Book with id: $id, not found"))
+            }
         }catch (e: Exception){
-            emit(Result.Error(UnknownError(e.message ?: "Unknown")))
+            Result.Error(UnknownError(e.message ?: "Unknown"))
         }
     }
+
 
     override suspend fun saveUserBook(userBook: BookEntry): Result<BookEntry, Error> {
         return try {

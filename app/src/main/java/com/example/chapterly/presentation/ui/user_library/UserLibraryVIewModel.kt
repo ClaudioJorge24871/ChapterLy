@@ -59,13 +59,14 @@ class UserLibraryViewModel @Inject constructor (
         viewModelScope.launch {
             _selectedBook.value = Result.Loading
 
-            try {
-                getUserBookByIDUseCase(id).collect() { result ->
-                    _selectedBook.value = result
+            val result = withContext(Dispatchers.IO) {
+                try {
+                    getUserBookByIDUseCase(id)
+                } catch (e: Exception) {
+                    Result.Error(UnknownError(e.message ?: "Unknown"))
                 }
-            } catch (e: Exception){
-                _selectedBook.value = Result.Error(UnknownError(e.message ?: "Unknown Error"))
             }
+            _selectedBook.value = result
         }
     }
 
@@ -78,7 +79,7 @@ class UserLibraryViewModel @Inject constructor (
      * Loads the books on success
      */
     fun deleteBook(uiData: BookUIDataDTO){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val entry = uiData.toDomain()
             when(deleteUserBookUseCase(entry)) {
                 is Result.Success -> {
