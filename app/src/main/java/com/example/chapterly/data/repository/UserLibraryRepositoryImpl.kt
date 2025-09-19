@@ -8,16 +8,17 @@ import com.example.chapterly.domain.model.Genre
 import com.example.chapterly.domain.repository.UserLibraryRepository
 import com.example.chapterly.presentation.mapper.toDomain
 import com.example.chapterly.presentation.mapper.toEntity
+import com.example.chapterly.resources.BookNotFoundError
 import com.example.chapterly.resources.Result
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.UnknownError
-import com.example.chapterly.resources.BookNotFoundError
 import com.example.chapterly.resources.UpdatingBookError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -37,20 +38,25 @@ class UserLibraryRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getBookByID(id: Int): Result<BookEntry, Error> {
-        return try{
-            val entity = bookDao.getBookByID(id)
-
-            //Decode the JSON string from DB into Set<Genre>
-            val decodedGenres: Set<Genre> =
-                Json.decodeFromString<List<Genre>>(entity.genres).toSet()
-
-            val domain = entity.toDomain().copy(
-                book = entity.toDomain().book.copy(genres = decodedGenres)
+    override fun getBookByID(id: Int): Flow<Result<BookEntry, Error>> = flow{
+        try {
+            emitAll(
+                bookDao.getBookByID(id)
+                    .map{
+                        entity ->
+                            if(entity != null){
+                                val decodedGenres = Json.decodeFromString<List<Genre>>(entity.genres).toSet()
+                                val domain = entity.toDomain().copy(
+                                    book = entity.toDomain().book.copy(genres = decodedGenres)
+                                )
+                                Result.Success(domain)
+                            }else{
+                                Result.Error(UnknownError("Book with id $id not found"))
+                            }
+                    }
             )
-            Result.Success(domain)
         }catch (e: Exception){
-            Result.Error(UnknownError(e.message ?: "Unknown"))
+            emit(Result.Error(UnknownError(e.message ?: "Unknown")))
         }
     }
 

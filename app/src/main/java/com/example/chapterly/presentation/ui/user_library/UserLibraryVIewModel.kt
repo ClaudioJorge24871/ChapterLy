@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -57,14 +58,14 @@ class UserLibraryViewModel @Inject constructor (
     fun getUserBookByID(id: Int) {
         viewModelScope.launch {
             _selectedBook.value = Result.Loading
-            val result = withContext(Dispatchers.IO) {
-                try {
-                    getUserBookByIDUseCase(id)
-                } catch (e: Exception) {
-                    Result.Error(UnknownError(e.message ?: "Unknown"))
+
+            try {
+                getUserBookByIDUseCase(id).collect() { result ->
+                    _selectedBook.value = result
                 }
+            } catch (e: Exception){
+                _selectedBook.value = Result.Error(UnknownError(e.message ?: "Unknown Error"))
             }
-            _selectedBook.value = result
         }
     }
 
@@ -79,10 +80,10 @@ class UserLibraryViewModel @Inject constructor (
     fun deleteBook(uiData: BookUIDataDTO){
         viewModelScope.launch {
             val entry = uiData.toDomain()
-            when(val result = deleteUserBookUseCase(entry)) {
+            when(deleteUserBookUseCase(entry)) {
                 is Result.Success -> {
-                    clearSelectedBook()
                     loadBooks()
+                    clearSelectedBook()
                 }
                 is Result.Error -> {
                     //TODO update UI error state or log
