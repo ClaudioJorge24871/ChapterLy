@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +44,8 @@ import org.intellij.lang.annotations.JdkConstants
 fun UserLibraryScreen(
     viewModel: UserLibraryViewModel,
     onAddBookClick: () -> Unit,
-    onSelectedBook: (Int) -> Unit
+    onSelectedBook: (Int) -> Unit,
+    onChangeStatus: (BookEntry) -> Unit
 ) {
     // Collect the books from StateFlow as Compose state
     val booksResult by viewModel.books.collectAsState()
@@ -62,7 +64,7 @@ fun UserLibraryScreen(
                 }
             }
         },
-        floatingActionButtonPosition = androidx.compose.material3.FabPosition.End
+        floatingActionButtonPosition = FabPosition.End
     ) {padding ->
         Column(
             modifier = Modifier
@@ -103,7 +105,8 @@ fun UserLibraryScreen(
                     }else{
                         BookList(
                             books = result.data,
-                            onSelectedBook = { id -> onSelectedBook(id) }
+                            onSelectedBook = { id -> onSelectedBook(id) },
+                            onChangeStatus = {entry -> onChangeStatus(entry)},
                         )
                     }
                 }
