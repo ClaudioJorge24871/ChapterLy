@@ -6,10 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chapterly.data.local.dao.BookDao
+import com.example.chapterly.domain.model.BookEntry
+import com.example.chapterly.domain.model.Status
 import com.example.chapterly.domain.use_case.SaveUserBookUseCase
 import com.example.chapterly.domain.use_case.UpdateUserBookUseCase
 import com.example.chapterly.presentation.dto.BookUIDataDTO
 import com.example.chapterly.presentation.mapper.toDomain
+import com.example.chapterly.presentation.mapper.toUIData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,6 +41,16 @@ class SaveBookViewModel @Inject constructor(
 
     fun updateField(update: (BookUIDataDTO) -> BookUIDataDTO) {
         book = update(book)
+    }
+
+    fun updateStatusSequentially(bookEntry: BookEntry){
+        val status = when(bookEntry.status){
+            Status.TO_READ -> Status.READING
+            Status.READING -> Status.FINISHED
+            Status.FINISHED -> Status.TO_READ
+        }
+        val uiData = bookEntry.copy(status = status).toUIData()
+        updateBook(uiData)
     }
 
     fun clearBook(){
