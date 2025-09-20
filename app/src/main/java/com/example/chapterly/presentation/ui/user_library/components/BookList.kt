@@ -59,7 +59,7 @@ fun BookList(
         columns = GridCells.Fixed(2), // Two books per row
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(25.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(books) { bookEntry ->
