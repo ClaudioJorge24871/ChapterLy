@@ -252,15 +252,20 @@ fun SaveBookScreen(
                             OutlinedTextField(
                                 value = book.pagination,
                                 onValueChange = { newValue ->
-                                    if (newValue.all { it.isDigit() }) {
-                                        if (newValue.length > 5) {
-                                            paginationError = "Max 5 digits"
-                                            viewModel.updateField { it.copy(pagination = newValue.take(5)) }
-                                        } else {
-                                            paginationError = null
-                                            viewModel.updateField { it.copy(pagination = newValue) }
-                                            book.currentPage.toIntOrNull()?.takeIf { it > newValue.toInt() }?.let {
-                                                viewModel.updateField { it.copy(currentPage = newValue) }
+                                    if (newValue.isBlank()){
+                                        viewModel.updateField { it.copy(pagination = newValue) }
+                                        viewModel.updateField { it.copy(currentPage = newValue) }
+                                    }else{
+                                        if (newValue.all { it.isDigit() }) {
+                                            if (newValue.length > 5) {
+                                                paginationError = "Max 5 digits"
+                                                viewModel.updateField { it.copy(pagination = newValue.take(5)) }
+                                            } else {
+                                                paginationError = null
+                                                viewModel.updateField { it.copy(pagination = newValue) }
+                                                book.currentPage.toIntOrNull()?.takeIf { it > newValue.toInt() }?.let {
+                                                    viewModel.updateField { it.copy(currentPage = newValue) }
+                                                }
                                             }
                                         }
                                     }
