@@ -44,12 +44,19 @@ class SaveBookViewModel @Inject constructor(
     }
 
     fun updateStatusSequentially(bookEntry: BookEntry){
-        val status = when(bookEntry.status){
+        val newStatus = when(bookEntry.status){
             Status.TO_READ -> Status.READING
             Status.READING -> Status.FINISHED
             Status.FINISHED -> Status.TO_READ
         }
-        val uiData = bookEntry.copy(status = status).toUIData()
+
+        val currentPage = if(newStatus == Status.FINISHED){
+            bookEntry.book.pagination
+        }else bookEntry.currentPage
+
+        val uiData = bookEntry.copy(status = newStatus, currentPage = currentPage)
+            .toUIData()
+
         updateBook(uiData)
     }
 
