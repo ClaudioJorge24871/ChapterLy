@@ -57,7 +57,9 @@ class MainActivity : ComponentActivity() {
                                 onSelectedBook = { id ->
                                     navController.navigate("updateBook/$id")
                                 },
-                                onChangeStatus = {entry -> saveBookViewModel.updateStatusSequentially(entry) }
+                                onChangeStatus = {entry ->
+                                    saveBookViewModel.updateStatusSequentially(entry)
+                                }
                             )
                         }
                         composable("saveBook") {

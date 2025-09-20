@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chapterly.data.local.dao.BookDao
 import com.example.chapterly.domain.model.BookEntry
 import com.example.chapterly.domain.model.Status
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.chapterly.resources.Error
 import com.example.chapterly.resources.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
@@ -57,7 +59,16 @@ class SaveBookViewModel @Inject constructor(
         val uiData = bookEntry.copy(status = newStatus, currentPage = currentPage)
             .toUIData()
 
-        updateBook(uiData)
+        viewModelScope.launch {
+            val entry = uiData.toDomain()
+            when (updateUserBookUseCase(entry)) {
+                is Result.Success -> {
+                    clearBook()
+                }
+                is Result.Error -> {}
+                is Result.Loading -> {}
+            }
+        }
     }
 
     fun clearBook(){
@@ -95,6 +106,5 @@ class SaveBookViewModel @Inject constructor(
                 is Result.Loading -> {}
             }
         }
-
     }
 }
